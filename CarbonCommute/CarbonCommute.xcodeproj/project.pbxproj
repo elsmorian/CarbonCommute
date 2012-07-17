@@ -15,6 +15,8 @@
 		E6D4E9E815B56BE50011798E /* CCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D4E9E715B56BE50011798E /* CCAppDelegate.m */; };
 		E6D4E9EB15B56BE50011798E /* CCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D4E9EA15B56BE50011798E /* CCViewController.m */; };
 		E6D4E9EE15B56BE50011798E /* CCViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6D4E9EC15B56BE50011798E /* CCViewController.xib */; };
+		E6D4E9F615B56EA20011798E /* CCLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6D4E9F515B56EA20011798E /* CCLocationController.m */; };
+		E6D4E9F815B56F550011798E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6D4E9F715B56F550011798E /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,9 @@
 		E6D4E9E915B56BE50011798E /* CCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCViewController.h; sourceTree = "<group>"; };
 		E6D4E9EA15B56BE50011798E /* CCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCViewController.m; sourceTree = "<group>"; };
 		E6D4E9ED15B56BE50011798E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CCViewController.xib; sourceTree = "<group>"; };
+		E6D4E9F415B56EA20011798E /* CCLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLocationController.h; sourceTree = "<group>"; };
+		E6D4E9F515B56EA20011798E /* CCLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLocationController.m; sourceTree = "<group>"; };
+		E6D4E9F715B56F550011798E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D4E9F815B56F550011798E /* CoreLocation.framework in Frameworks */,
 				E6D4E9D815B56BE50011798E /* UIKit.framework in Frameworks */,
 				E6D4E9DA15B56BE50011798E /* Foundation.framework in Frameworks */,
 				E6D4E9DC15B56BE50011798E /* CoreGraphics.framework in Frameworks */,
@@ -67,6 +73,7 @@
 		E6D4E9D615B56BE50011798E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6D4E9F715B56F550011798E /* CoreLocation.framework */,
 				E6D4E9D715B56BE50011798E /* UIKit.framework */,
 				E6D4E9D915B56BE50011798E /* Foundation.framework */,
 				E6D4E9DB15B56BE50011798E /* CoreGraphics.framework */,
@@ -79,6 +86,8 @@
 			children = (
 				E6D4E9E615B56BE50011798E /* CCAppDelegate.h */,
 				E6D4E9E715B56BE50011798E /* CCAppDelegate.m */,
+				E6D4E9F415B56EA20011798E /* CCLocationController.h */,
+				E6D4E9F515B56EA20011798E /* CCLocationController.m */,
 				E6D4E9E915B56BE50011798E /* CCViewController.h */,
 				E6D4E9EA15B56BE50011798E /* CCViewController.m */,
 				E6D4E9EC15B56BE50011798E /* CCViewController.xib */,
@@ -164,6 +173,7 @@
 				E6D4E9E415B56BE50011798E /* main.m in Sources */,
 				E6D4E9E815B56BE50011798E /* CCAppDelegate.m in Sources */,
 				E6D4E9EB15B56BE50011798E /* CCViewController.m in Sources */,
+				E6D4E9F615B56EA20011798E /* CCLocationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
