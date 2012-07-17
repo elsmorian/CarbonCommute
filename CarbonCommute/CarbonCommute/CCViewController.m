@@ -14,6 +14,7 @@
 
 @implementation CCViewController
 @synthesize locationLabel;
+@synthesize statusUpdatesView;
 @synthesize locationController = _locationController;
 
 //////////
@@ -42,6 +43,7 @@
 - (void)viewDidUnload
 {
     [self setLocationLabel:nil];
+    [self setStatusUpdatesView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -60,8 +62,15 @@
   self.locationLabel.text = [NSString stringWithFormat:@"lat: %f, lng: %f", location.coordinate.latitude, location.coordinate.longitude];
 }
 
+- (void) locationController:(id)controller newStatus:(NSString *) status
+{
+  NSString *newText = [self.statusUpdatesView.text stringByAppendingFormat:@"\n%@", status];
+  self.statusUpdatesView.text = newText;
+}
+
 - (IBAction)setHomeLocationFromCurrentLocation:(id)sender {
   CLLocation *location = self.locationController.currentLocation;
   [self.locationController registerHomeLocation:location];
 }
+
 @end

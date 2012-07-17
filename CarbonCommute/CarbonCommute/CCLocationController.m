@@ -28,7 +28,7 @@
 - (void) registerHomeLocation:(CLLocation *)location
 {
   CLRegion *region = [[CLRegion alloc] initCircularRegionWithCenter:location.coordinate 
-                                                             radius:50. 
+                                                             radius:10.
                                                          identifier:@"leavingHome"];
   NSLog(@"Got region");
   [self.manager startMonitoringForRegion:region desiredAccuracy:5.];
@@ -41,15 +41,21 @@
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
   NSLog(@"Did start monitoring for region: '%@'", region.identifier);
+  [self.delegate locationController:self newStatus:@"-------------------------"];
+  [self.delegate locationController:self newStatus:@"Started monitoring region"];
+  [self.delegate locationController:self newStatus:@"Good luck"];
+  [self.delegate locationController:self newStatus:@"-------------------------"];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
+  [self.delegate locationController:self newStatus:@"Entered region"];
   NSLog(@"Did enter region");
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
+  [self.delegate locationController:self newStatus:@"Left region"];
   NSLog(@"Did exit region");
 }
 

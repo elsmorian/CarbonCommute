@@ -11,6 +11,7 @@
 
 @protocol CCLocationControllerDelegate
 - (void) locationController:(id)controller updatedLocation:(CLLocation *)location;
+- (void) locationController:(id)controller newStatus:(NSString *) status;
 @end
 
 @interface CCLocationController : NSObject <CLLocationManagerDelegate>

@@ -13,6 +13,7 @@
 
 @property (nonatomic, retain) CCLocationController *locationController;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+@property (weak, nonatomic) IBOutlet UITextView *statusUpdatesView;
 - (IBAction)setHomeLocationFromCurrentLocation:(id)sender;
 
 @end
