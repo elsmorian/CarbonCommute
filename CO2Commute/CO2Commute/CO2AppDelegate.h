@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CO2AppDelegate : UIResponder <UIApplicationDelegate>
+@class  CCLocationController;
+
+@interface CO2AppDelegate : UIResponder <UIApplicationDelegate> 
+{
+  CCLocationController *_locationController;
+}
 
 @property (strong, nonatomic) UIWindow *window;
 

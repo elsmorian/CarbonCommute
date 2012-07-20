@@ -7,6 +7,8 @@
 //
 
 #import "CO2AppDelegate.h"
+#import "CCLocationController.h"
+#import "CO2RootViewController.h"
 
 @implementation CO2AppDelegate
 
@@ -18,7 +20,15 @@
     // Override point for customization after application launch.
     //self.window.backgroundColor = [UIColor whiteColor];
     //[self.window makeKeyAndVisible];
-    return YES;
+  
+  _locationController = [[CCLocationController alloc] init];
+  
+  // Nasty stuff to let the main view controller know about the controller.
+  UINavigationController *navController = (UINavigationController *) self.window.rootViewController;
+  CO2RootViewController *rootVC = [[navController viewControllers] objectAtIndex:0];
+  rootVC.locationController = _locationController;
+
+  return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -31,6 +41,7 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+  [_locationController terminateNicely];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -45,7 +56,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+  // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
 @end

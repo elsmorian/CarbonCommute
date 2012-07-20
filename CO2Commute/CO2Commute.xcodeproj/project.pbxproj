@@ -16,6 +16,11 @@
 		E63B030215B87047006D0890 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E63B030115B87047006D0890 /* Main.storyboard */; };
 		E63B030915B95513006D0890 /* CCLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B030815B95513006D0890 /* CCLocationController.m */; };
 		E63B030B15B95570006D0890 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B030A15B95570006D0890 /* CoreLocation.framework */; };
+		E63B031315B95803006D0890 /* CO2RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031215B95803006D0890 /* CO2RootViewController.m */; };
+		E63B031615B958C9006D0890 /* CO2MyCommutesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031515B958C9006D0890 /* CO2MyCommutesViewController.m */; };
+		E63B031915B958E4006D0890 /* CO2SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031815B958E4006D0890 /* CO2SettingsViewController.m */; };
+		E63B031C15B95FFE006D0890 /* CO2LocationRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031B15B95FFE006D0890 /* CO2LocationRecorder.m */; };
+		E63B031F15B99518006D0890 /* CO2Locaton.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031E15B99518006D0890 /* CO2Locaton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +38,16 @@
 		E63B030715B95513006D0890 /* CCLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLocationController.h; sourceTree = "<group>"; };
 		E63B030815B95513006D0890 /* CCLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLocationController.m; sourceTree = "<group>"; };
 		E63B030A15B95570006D0890 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E63B031115B95803006D0890 /* CO2RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2RootViewController.h; sourceTree = "<group>"; };
+		E63B031215B95803006D0890 /* CO2RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2RootViewController.m; sourceTree = "<group>"; };
+		E63B031415B958C9006D0890 /* CO2MyCommutesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2MyCommutesViewController.h; sourceTree = "<group>"; };
+		E63B031515B958C9006D0890 /* CO2MyCommutesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2MyCommutesViewController.m; sourceTree = "<group>"; };
+		E63B031715B958E4006D0890 /* CO2SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2SettingsViewController.h; sourceTree = "<group>"; };
+		E63B031815B958E4006D0890 /* CO2SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2SettingsViewController.m; sourceTree = "<group>"; };
+		E63B031A15B95FFE006D0890 /* CO2LocationRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2LocationRecorder.h; sourceTree = "<group>"; };
+		E63B031B15B95FFE006D0890 /* CO2LocationRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2LocationRecorder.m; sourceTree = "<group>"; };
+		E63B031D15B99518006D0890 /* CO2Locaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2Locaton.h; sourceTree = "<group>"; };
+		E63B031E15B99518006D0890 /* CO2Locaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2Locaton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +101,17 @@
 				E63B02FA15B8702A006D0890 /* CO2AppDelegate.m */,
 				E63B030715B95513006D0890 /* CCLocationController.h */,
 				E63B030815B95513006D0890 /* CCLocationController.m */,
+				E63B031A15B95FFE006D0890 /* CO2LocationRecorder.h */,
+				E63B031B15B95FFE006D0890 /* CO2LocationRecorder.m */,
 				E63B02F115B8702A006D0890 /* Supporting Files */,
+				E63B031115B95803006D0890 /* CO2RootViewController.h */,
+				E63B031215B95803006D0890 /* CO2RootViewController.m */,
+				E63B031415B958C9006D0890 /* CO2MyCommutesViewController.h */,
+				E63B031515B958C9006D0890 /* CO2MyCommutesViewController.m */,
+				E63B031715B958E4006D0890 /* CO2SettingsViewController.h */,
+				E63B031815B958E4006D0890 /* CO2SettingsViewController.m */,
+				E63B031D15B99518006D0890 /* CO2Locaton.h */,
+				E63B031E15B99518006D0890 /* CO2Locaton.m */,
 			);
 			path = CO2Commute;
 			sourceTree = "<group>";
@@ -168,6 +193,11 @@
 				E63B02F715B8702A006D0890 /* main.m in Sources */,
 				E63B02FB15B8702A006D0890 /* CO2AppDelegate.m in Sources */,
 				E63B030915B95513006D0890 /* CCLocationController.m in Sources */,
+				E63B031315B95803006D0890 /* CO2RootViewController.m in Sources */,
+				E63B031615B958C9006D0890 /* CO2MyCommutesViewController.m in Sources */,
+				E63B031915B958E4006D0890 /* CO2SettingsViewController.m in Sources */,
+				E63B031C15B95FFE006D0890 /* CO2LocationRecorder.m in Sources */,
+				E63B031F15B99518006D0890 /* CO2Locaton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
