@@ -21,6 +21,8 @@
 		E63B031915B958E4006D0890 /* CO2SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031815B958E4006D0890 /* CO2SettingsViewController.m */; };
 		E63B031C15B95FFE006D0890 /* CO2LocationRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031B15B95FFE006D0890 /* CO2LocationRecorder.m */; };
 		E63B031F15B99518006D0890 /* CO2Locaton.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031E15B99518006D0890 /* CO2Locaton.m */; };
+		E69FB99C15C6DA240073297A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E69FB99B15C6DA240073297A /* MapKit.framework */; };
+		E69FB9A015C6DB2F0073297A /* CO2MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69FB99F15C6DB2F0073297A /* CO2MapViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,9 @@
 		E63B031B15B95FFE006D0890 /* CO2LocationRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2LocationRecorder.m; sourceTree = "<group>"; };
 		E63B031D15B99518006D0890 /* CO2Locaton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2Locaton.h; sourceTree = "<group>"; };
 		E63B031E15B99518006D0890 /* CO2Locaton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2Locaton.m; sourceTree = "<group>"; };
+		E69FB99B15C6DA240073297A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		E69FB99E15C6DB2F0073297A /* CO2MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2MapViewController.h; sourceTree = "<group>"; };
+		E69FB99F15C6DB2F0073297A /* CO2MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2MapViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E69FB99C15C6DA240073297A /* MapKit.framework in Frameworks */,
 				E63B030B15B95570006D0890 /* CoreLocation.framework in Frameworks */,
 				E63B02EB15B8702A006D0890 /* UIKit.framework in Frameworks */,
 				E63B02ED15B8702A006D0890 /* Foundation.framework in Frameworks */,
@@ -68,6 +74,7 @@
 		E63B02DB15B8702A006D0890 = {
 			isa = PBXGroup;
 			children = (
+				E69FB99B15C6DA240073297A /* MapKit.framework */,
 				E63B030A15B95570006D0890 /* CoreLocation.framework */,
 				E63B02F015B8702A006D0890 /* CO2Commute */,
 				E63B02E915B8702A006D0890 /* Frameworks */,
@@ -103,6 +110,8 @@
 				E63B030815B95513006D0890 /* CCLocationController.m */,
 				E63B031A15B95FFE006D0890 /* CO2LocationRecorder.h */,
 				E63B031B15B95FFE006D0890 /* CO2LocationRecorder.m */,
+				E69FB99E15C6DB2F0073297A /* CO2MapViewController.h */,
+				E69FB99F15C6DB2F0073297A /* CO2MapViewController.m */,
 				E63B02F115B8702A006D0890 /* Supporting Files */,
 				E63B031115B95803006D0890 /* CO2RootViewController.h */,
 				E63B031215B95803006D0890 /* CO2RootViewController.m */,
@@ -198,6 +207,7 @@
 				E63B031915B958E4006D0890 /* CO2SettingsViewController.m in Sources */,
 				E63B031C15B95FFE006D0890 /* CO2LocationRecorder.m in Sources */,
 				E63B031F15B99518006D0890 /* CO2Locaton.m in Sources */,
+				E69FB9A015C6DB2F0073297A /* CO2MapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,10 +273,14 @@
 		E63B02FF15B8702A006D0890 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CO2Commute/CO2Commute-Prefix.pch";
 				INFOPLIST_FILE = "CO2Commute/CO2Commute-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -274,10 +288,14 @@
 		E63B030015B8702A006D0890 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CO2Commute/CO2Commute-Prefix.pch";
 				INFOPLIST_FILE = "CO2Commute/CO2Commute-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

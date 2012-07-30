@@ -27,6 +27,22 @@
     _manager.delegate = self;
     [self loadLocationRecorder];
   }
+    [self.delegate newStatus:@"Started..."];
+    NSLog(@"Starting!!");
+    CLLocationCoordinate2D home = CLLocationCoordinate2DMake(52.195774, 0.142195);
+    //CLLocationCoordinate2D *home = [[[CLLocationCoordinate2D alloc] init];
+    //]WithLatitude:52.195774 longitude:0.142195];
+    CLLocationCoordinate2D work = CLLocationCoordinate2DMake(52.210644, 0.092504);
+    
+    CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home
+                                                               radius:15.
+                                                           identifier:@"home"];
+    CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work
+                                                                   radius:15.
+                                                               identifier:@"work"];
+    [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.];
+    [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.];
+    [self.delegate newStatus:@"Started!"];
   return self;
 }
 
@@ -85,22 +101,22 @@
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
   NSLog(@"Did start monitoring for region: '%@'", region.identifier);
-  [self.delegate locationController:self newStatus:@"-------------------------"];
-  [self.delegate locationController:self newStatus:@"Started monitoring region"];
-  [self.delegate locationController:self newStatus:@"Good luck"];
-  [self.delegate locationController:self newStatus:@"-------------------------"];
+  //[self.delegate locationController:self newStatus:@"-------------------------"];
+  //[self.delegate locationController:self newStatus:@"Started monitoring region"];
+  //[self.delegate locationController:self newStatus:@"Good luck"];
+  //[self.delegate locationController:self newStatus:@"-------------------------"];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
-  [self.delegate locationController:self newStatus:@"Entered region"];
+  //[self.delegate locationController:self newStatus:@"Entered region"];
   NSLog(@"Did enter region '%@'", region.identifier);
   [self stopRecording];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
-  [self.delegate locationController:self newStatus:@"Left region"];
+  //[self.delegate locationController:self newStatus:@"Left region"];
   [self startRecording];
   NSLog(@"Did exit region '%@'", region.identifier);
 }
@@ -108,7 +124,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {  
   self.currentLocation = newLocation;
-  [self.delegate locationController:self updatedLocation:newLocation];
+  //[self.delegate locationController:self updatedLocation:newLocation];
   
   [self.recorder notifyOfNewLocation:newLocation];
 }

@@ -15,6 +15,8 @@
 
 @implementation CO2RootViewController
 @synthesize loggingSwitch;
+@synthesize loggingSpinner;
+@synthesize _debugText;
 @synthesize locationController = _locationController;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -28,19 +30,28 @@
 
 - (IBAction)switched: (UISwitch *)mySwitch{
   if (mySwitch.on){
-    NSLog(@"Switched on!");
+    //NSLog(@"Switched on!");
     [self.locationController startTracking];
+    [loggingSpinner startAnimating];
+    [loggingSpinner setHidden:false];
   }
   else {
     [self.locationController stopTracking];
-    NSLog(@"Switched off!");
+    [loggingSpinner setHidden:false];
+    [loggingSpinner stopAnimating];
+    //NSLog(@"Switched off!");
   }
+}
+
+- (void) newStatus:(NSString *) status {
+    NSString *newText = [self._debugText.text stringByAppendingFormat:@"\n%@", status];
+    self._debugText.text = newText;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    //[self newStatus:@"Testings"];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -51,6 +62,8 @@
 - (void)viewDidUnload
 {
   [self setLoggingSwitch:nil];
+    [self setLoggingSpinner:nil];
+    [self set_debugText:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

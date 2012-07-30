@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="GoW-e8-Im0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2549" systemVersion="12A269" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="GoW-e8-Im0">
     <dependencies>
-        <development defaultVersion="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+        <deployment defaultVersion="1296" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1498"/>
     </dependencies>
     <scenes>
         <!--Root View Controller - My Carbon Commute-->
@@ -14,6 +14,13 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <textView key="tableFooterView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="Hax-Z3-stv">
+                            <rect key="frame" x="0.0" y="256" width="320" height="161"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
                         <sections>
                             <tableViewSection headerTitle="Location Tracking" id="r5M-4d-0HD">
                                 <cells>
@@ -38,6 +45,10 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" id="yEG-b1-VDy">
+                                                    <rect key="frame" x="165" y="11" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -117,6 +128,8 @@
                         <barButtonItem key="backBarButtonItem" title="Menu" id="Vv3-CF-rpg"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="_debugText" destination="Hax-Z3-stv" id="FTt-du-cB3"/>
+                        <outlet property="loggingSpinner" destination="yEG-b1-VDy" id="zoJ-ef-UL8"/>
                         <outlet property="loggingSwitch" destination="xi0-WR-f8L" id="cft-bm-PJ9"/>
                     </connections>
                 </tableViewController>
@@ -260,7 +273,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="My Work" id="zwd-ry-tpK">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Gk1-3O-0bR" detailTextLabel="voL-Yq-dxT" style="IBUITableViewCellStyleValue1" id="2Tk-hs-8HI">
+                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Gk1-3O-0bR" detailTextLabel="voL-Yq-dxT" style="IBUITableViewCellStyleValue1" id="2Tk-hs-8HI">
                                         <rect key="frame" x="0.0" y="318" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -284,9 +297,6 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="fV7-2s-4tu" kind="push" id="xae-4x-bLJ"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" id="W6V-YI-lCd">
                                         <rect key="frame" x="0.0" y="363" width="320" height="45"/>
@@ -618,26 +628,26 @@
             </objects>
             <point key="canvasLocation" x="1114" y="-646"/>
         </scene>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="Q7n-6q-S3d">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vwo-JG-yDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="cTK-Zs-rpW" sceneMemberID="viewController">
+                <viewController id="cTK-Zs-rpW" customClass="CO2MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g4K-1j-y5d">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Map!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="KgY-eJ-Qd7">
-                                <rect key="frame" x="139" y="219" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="XYK-Xw-0Wn">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="oHv-11-XpT"/>
+                    <connections>
+                        <outlet property="map" destination="XYK-Xw-0Wn" id="Poa-SX-sLl"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1599" y="-646"/>
@@ -715,38 +725,47 @@
             </objects>
             <point key="canvasLocation" x="72" y="-2"/>
         </scene>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="Ucl-2E-ZZv">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mVD-Ag-fXX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="fV7-2s-4tu" sceneMemberID="viewController">
+                <viewController id="fV7-2s-4tu" customClass="CO2MapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uFB-3U-gkf">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Map!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="EMT-5k-LlQ">
-                                <rect key="frame" x="139" y="219" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" showsUserLocation="YES" id="rAO-Re-DYF">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="358"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="HAZ-kx-pof"/>
+                    <connections>
+                        <outlet property="map" destination="rAO-Re-DYF" id="9Jj-wz-mKT"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1599" y="-2"/>
         </scene>
     </scenes>
     <classes>
+        <class className="CO2MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="map" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
         <class className="CO2MyCommutesViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2MyCommutesViewController.h"/>
         </class>
         <class className="CO2RootViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2RootViewController.h"/>
             <relationships>
+                <relationship kind="action" name="switched:" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="_debugText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="loggingSpinner" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="loggingSwitch" candidateClass="UISwitch"/>
             </relationships>
         </class>
@@ -759,7 +778,4 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
-    <inferredMetricsTieBreakers>
-        <segue reference="z4O-9A-1pn"/>
-    </inferredMetricsTieBreakers>
 </document>
