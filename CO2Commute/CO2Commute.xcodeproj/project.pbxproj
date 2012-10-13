@@ -23,6 +23,9 @@
 		E63B031F15B99518006D0890 /* CO2Locaton.m in Sources */ = {isa = PBXBuildFile; fileRef = E63B031E15B99518006D0890 /* CO2Locaton.m */; };
 		E69FB99C15C6DA240073297A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E69FB99B15C6DA240073297A /* MapKit.framework */; };
 		E69FB9A015C6DB2F0073297A /* CO2MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69FB99F15C6DB2F0073297A /* CO2MapViewController.m */; };
+		E6CEC2B51610AA1B0049F421 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6CEC2B41610AA1B0049F421 /* Default-568h@2x.png */; };
+		E6CEC2B91610B1B40049F421 /* CO2CommuteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CEC2B81610B1B40049F421 /* CO2CommuteMapViewController.m */; };
+		E6CEC2BC1610B68F0049F421 /* CO2MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CEC2BB1610B68F0049F421 /* CO2MapAnnotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +56,11 @@
 		E69FB99B15C6DA240073297A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E69FB99E15C6DB2F0073297A /* CO2MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2MapViewController.h; sourceTree = "<group>"; };
 		E69FB99F15C6DB2F0073297A /* CO2MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2MapViewController.m; sourceTree = "<group>"; };
+		E6CEC2B41610AA1B0049F421 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		E6CEC2B71610B1B40049F421 /* CO2CommuteMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2CommuteMapViewController.h; sourceTree = "<group>"; };
+		E6CEC2B81610B1B40049F421 /* CO2CommuteMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2CommuteMapViewController.m; sourceTree = "<group>"; };
+		E6CEC2BA1610B68F0049F421 /* CO2MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2MapAnnotation.h; sourceTree = "<group>"; };
+		E6CEC2BB1610B68F0049F421 /* CO2MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2MapAnnotation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +82,7 @@
 		E63B02DB15B8702A006D0890 = {
 			isa = PBXGroup;
 			children = (
+				E6CEC2B41610AA1B0049F421 /* Default-568h@2x.png */,
 				E69FB99B15C6DA240073297A /* MapKit.framework */,
 				E63B030A15B95570006D0890 /* CoreLocation.framework */,
 				E63B02F015B8702A006D0890 /* CO2Commute */,
@@ -104,6 +113,10 @@
 			isa = PBXGroup;
 			children = (
 				E63B030115B87047006D0890 /* Main.storyboard */,
+				E6CEC2B71610B1B40049F421 /* CO2CommuteMapViewController.h */,
+				E6CEC2BA1610B68F0049F421 /* CO2MapAnnotation.h */,
+				E6CEC2BB1610B68F0049F421 /* CO2MapAnnotation.m */,
+				E6CEC2B81610B1B40049F421 /* CO2CommuteMapViewController.m */,
 				E63B02F915B8702A006D0890 /* CO2AppDelegate.h */,
 				E63B02FA15B8702A006D0890 /* CO2AppDelegate.m */,
 				E63B030715B95513006D0890 /* CCLocationController.h */,
@@ -189,6 +202,7 @@
 			files = (
 				E63B02F515B8702A006D0890 /* InfoPlist.strings in Resources */,
 				E63B030215B87047006D0890 /* Main.storyboard in Resources */,
+				E6CEC2B51610AA1B0049F421 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +222,8 @@
 				E63B031C15B95FFE006D0890 /* CO2LocationRecorder.m in Sources */,
 				E63B031F15B99518006D0890 /* CO2Locaton.m in Sources */,
 				E69FB9A015C6DB2F0073297A /* CO2MapViewController.m in Sources */,
+				E6CEC2B91610B1B40049F421 /* CO2CommuteMapViewController.m in Sources */,
+				E6CEC2BC1610B68F0049F421 /* CO2MapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +294,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CO2Commute/CO2Commute-Prefix.pch";
 				INFOPLIST_FILE = "CO2Commute/CO2Commute-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -293,6 +310,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CO2Commute/CO2Commute-Prefix.pch";
 				INFOPLIST_FILE = "CO2Commute/CO2Commute-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

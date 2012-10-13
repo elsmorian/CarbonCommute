@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+extern int const GPSINTERVAL;
+extern int const MINGPSACCURACY;
+
 @interface CO2LocationRecorder : NSObject <NSCoding>
 {
   BOOL _activelyMeasuringLocation;
@@ -16,8 +19,32 @@
 
 @property (nonatomic, readonly) NSMutableArray *loggedLocations;
 
-- (void) notifyOfNewLocation:(CLLocation *)location;
+///////////
+#pragma mark - Core methods
+
+- (void) notifyOfNewLocation:(CLLocation *)newLocation;
 - (void) startRecording;
 - (void) stopRecording;
+
+///////////
+#pragma mark - Commute Management
+
+- (void) createNewCommute;
+- (void) addLocationToCurrentCommute:(CLLocation *)newLocation;
+- (void) endCurrentCommute;
+
+///////////
+#pragma mark - Commute Location Interfaces
+- (NSDictionary *) getCurrentCommuteStats;
+- (void) currentCommuteReplaceLastLocation:(CLLocation *)newLocation;
+- (CLLocation *) getCurrentCommuteLastLocation;
+- (NSArray *) getCurrentCommuteLocations;
+- (void) removeCurrentCommuteLastLocation;
+- (void) clearCurrentCommuteLocations;
+- (BOOL) currentCommuteHasLocations;
+- (int) countCommutes;
+- (int) countCurrentCommuteLocations;
+- (int) countAllLocations;
+- (NSArray *) getCommutes;
 
 @end

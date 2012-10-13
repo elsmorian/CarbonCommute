@@ -7,6 +7,10 @@
 //
 
 #import "CO2MyCommutesViewController.h"
+#import "CO2AppDelegate.h"
+#import "CCLocationController.h"
+#import "CO2LocationRecorder.h"
+
 
 @interface CO2MyCommutesViewController ()
 
@@ -26,7 +30,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CCLocationController *locControl = [appDelegate getLocController];
+    
+    [_currentNumberOfLocations setText:[NSString stringWithFormat:@"%i",[[locControl recorder] countCurrentCommuteLocations]]];
+    
+    //NSLog(@"counted %i locatins",[[locControl recorder] count]);
+    //[_numberOfData setText:[NSString stringWithFormat:@"%i",[[locControl recorder] count]]];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -36,6 +47,11 @@
 
 - (void)viewDidUnload
 {
+    [self setCurrentNumberOfLocations:nil];
+    [self setCurrentTimeTaken:nil];
+    [self setCurrentDistance:nil];
+    [self setCurrentAverageSpeed:nil];
+    [self setCurrentNumberOfLocations:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -85,4 +101,9 @@
 }
 */
 
+//- (IBAction)clearButton:(id)sender {
+//    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    CCLocationController *locControl = [appDelegate getLocController];
+//    //[[locControl recorder] clearLocations];
+//}
 @end

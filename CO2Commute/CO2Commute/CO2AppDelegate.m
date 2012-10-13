@@ -9,6 +9,7 @@
 #import "CO2AppDelegate.h"
 #import "CCLocationController.h"
 #import "CO2RootViewController.h"
+//#import "CO2SettingsViewController.h"
 
 @implementation CO2AppDelegate
 
@@ -27,6 +28,8 @@
   UINavigationController *navController = (UINavigationController *) self.window.rootViewController;
   CO2RootViewController *rootVC = [[navController viewControllers] objectAtIndex:0];
   rootVC.locationController = _locationController;
+  _locationController.delegate = rootVC;
+  //CO2SettingsViewController *settingsVC =
 
   return YES;
 }
@@ -57,6 +60,11 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (CCLocationController *)getLocController
+{
+    return _locationController;
 }
 
 @end

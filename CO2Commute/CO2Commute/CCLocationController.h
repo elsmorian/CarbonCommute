@@ -15,16 +15,20 @@
 - (void) newStatus:(NSString *) status;
 @end
 
-@interface CCLocationController : NSObject <CLLocationManagerDelegate>
+@interface CCLocationController : NSObject <CLLocationManagerDelegate, NSURLConnectionDelegate>
 
 @property (nonatomic, assign) id<CCLocationControllerDelegate> delegate;
 @property (nonatomic, retain) CLLocationManager *manager;
 @property (nonatomic, retain) CLLocation *currentLocation;
 @property (nonatomic, retain) CO2LocationRecorder *recorder;
 
+- (NSString *) locationRecorderFilePath;
 - (void) registerHomeLocation;
 - (void) terminateNicely;
+- (void) setUp;
 - (void) startTracking;
 - (void) stopTracking;
+- (void) uploadNextData;
+- (void) uploadData;
 
 @end

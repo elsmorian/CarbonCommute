@@ -17,4 +17,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+- (CCLocationController *) getLocController;
+
 @end

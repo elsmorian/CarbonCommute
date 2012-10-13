@@ -14,6 +14,7 @@
 @end
 
 @implementation CO2RootViewController
+@synthesize uploadButton;
 @synthesize loggingSwitch;
 @synthesize loggingSpinner;
 @synthesize _debugText;
@@ -31,7 +32,7 @@
 - (IBAction)switched: (UISwitch *)mySwitch{
   if (mySwitch.on){
     //NSLog(@"Switched on!");
-    [self.locationController startTracking];
+    [_locationController startTracking];
     [loggingSpinner startAnimating];
     [loggingSpinner setHidden:false];
   }
@@ -42,6 +43,12 @@
     //NSLog(@"Switched off!");
   }
 }
+- (IBAction)uploadTapped:(id)sender {
+    NSLog(@"Upload Tapped");
+    [_locationController uploadData];
+}
+
+//- (IBAction)uploadTapped: (UIButton *)uploadButton
 
 - (void) newStatus:(NSString *) status {
     NSString *newText = [self._debugText.text stringByAppendingFormat:@"\n%@", status];
@@ -51,7 +58,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //[self newStatus:@"Testings"];
+    [_locationController setUp];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -64,6 +71,7 @@
   [self setLoggingSwitch:nil];
     [self setLoggingSpinner:nil];
     [self set_debugText:nil];
+    [self setUploadButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
