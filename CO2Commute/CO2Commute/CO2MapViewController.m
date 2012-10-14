@@ -37,17 +37,12 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
-    if (![defaults objectForKey:@"home"] || ![defaults objectForKey:@"work"]){
+    if (![defaults objectForKey:@"home lat"] || ![defaults objectForKey:@"work lat"]){
         NSLog(@"Home or work not set, not setting up geofences");
     }
     else {
-        CLLocationCoordinate2D home;
-        NSValue *homeValue = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"home"]];
-        [homeValue getValue:&home];
-        
-        CLLocationCoordinate2D work;
-        NSValue *workValue = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"work"]];
-        [workValue getValue:&work];
+        CLLocationCoordinate2D home = CLLocationCoordinate2DMake([[defaults valueForKey:@"home lat"] doubleValue], [[defaults valueForKey:@"home lng"] doubleValue]);
+        CLLocationCoordinate2D work = CLLocationCoordinate2DMake([[defaults valueForKey:@"work lat"] doubleValue], [[defaults valueForKey:@"work lng"] doubleValue]);
         
         MKPointAnnotation *homeAnnot = [[MKPointAnnotation alloc] init];
         homeAnnot.coordinate = home;
@@ -133,8 +128,10 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     //Button indexes: Home = 0, Work = 1
     CLLocationCoordinate2D touchMapCoordinate = [_map convertPoint:_tempTouchPoint toCoordinateFromView:_map];
-    NSValue *touchLocation = [NSValue valueWithBytes:&touchMapCoordinate objCType:@encode(CLLocationCoordinate2D)];
-    NSData *touchData = [NSKeyedArchiver archivedDataWithRootObject:touchLocation];
+    //NSValue *touchLocation = [NSValue valueWithBytes:&touchMapCoordinate objCType:@encode(CLLocationCoordinate2D)];
+    //NSData *touchData = [NSKeyedArchiver archivedDataWithRootObject:touchLocation];
+    NSNumber *lat = [[NSNumber alloc] initWithDouble:touchMapCoordinate.latitude];
+    NSNumber *lng = [[NSNumber alloc] initWithDouble:touchMapCoordinate.longitude];
     
     MKPointAnnotation *annot = [[MKPointAnnotation alloc] init];
     annot.coordinate = touchMapCoordinate;
@@ -148,8 +145,8 @@
                 break;
             }
         }
-        //init an NSNumber to store these.
-        [defaults setObject:touchMapCoordinate.latitude forKey:@"home"];
+        [defaults setObject:lat forKey:@"home lat"];
+        [defaults setObject:lng forKey:@"home lng"];
         [_map addAnnotation:annot];
     }
     if (buttonIndex == 1){
@@ -161,7 +158,8 @@
                 break;
             }
         }
-        [defaults setObject:touchData forKey:@"work"];
+        [defaults setObject:lat forKey:@"work lat"];
+        [defaults setObject:lng forKey:@"work lng"];
         [_map addAnnotation:annot];
     }
     [defaults synchronize];

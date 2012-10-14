@@ -99,16 +99,12 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
-    if (![defaults objectForKey:@"home"] || ![defaults objectForKey:@"work"]){
+    if (![defaults objectForKey:@"home lat"] || ![defaults objectForKey:@"work lat"]){
         NSLog(@"Home or work not set, not setting up geofences");
     }
     else {
-        CLLocationCoordinate2D home;
-        NSValue *homeValue = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"home"]];
-        [homeValue getValue:&home];
-        CLLocationCoordinate2D work;
-        NSValue *workValue = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"work"]];
-        [workValue getValue:&work];
+        CLLocationCoordinate2D home = CLLocationCoordinate2DMake([[defaults valueForKey:@"home lat"] doubleValue], [[defaults valueForKey:@"home lng"] doubleValue]);
+        CLLocationCoordinate2D work = CLLocationCoordinate2DMake([[defaults valueForKey:@"work lat"] doubleValue], [[defaults valueForKey:@"work lng"] doubleValue]);
         
         CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home radius:15.0 identifier:@"home"];
         CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work radius:15.0 identifier:@"work"];

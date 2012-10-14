@@ -18,5 +18,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *loggedLocationsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *loggedDataLabel;
+@property (weak, nonatomic) IBOutlet UILabel *loggedCommutesLabel;
 
 @end

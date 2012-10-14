@@ -54,8 +54,8 @@
    
     int numberOfLocations = [[locControl recorder] countAllLocations];
     NSString *locationNumberString = [[NSString alloc] initWithFormat:@"%i", numberOfLocations];
-    //NSLog(@"Size: %f kB", fileSize);
-    //NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+    int numberOfCommutes = [[locControl recorder] countCommutes];
+    NSString *commuteNumberString = [[NSString alloc] initWithFormat:@"%i", numberOfCommutes];
     
     
     [self.crsIDField setText:crsid];
@@ -68,6 +68,7 @@
     
     [self.loggedDataLabel setText:fileSizeString];
     [self.loggedLocationsLabel setText:locationNumberString];
+    [self.loggedCommutesLabel setText:commuteNumberString];
     
     [super viewDidLoad];
     //[_crsIDField setText:@"Loaded LOL"];
@@ -91,6 +92,8 @@
     [self setUrlField:nil];
     [self setLoggedLocationsLabel:nil];
     [self setLoggedDataLabel:nil];
+    [self setLoggedCommutesLabel:nil];
+    [self setLoggedCommutesLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
