@@ -26,6 +26,7 @@
 - (void) registerHomeLocation;
 - (void) terminateNicely;
 - (void) setUp;
+- (void) setUpRegionMonitoring;
 - (void) startTracking;
 - (void) stopTracking;
 - (void) uploadNextData;

@@ -37,20 +37,41 @@
 }
 
 - (void) setUp{
-    [self.delegate newStatus:@"Starting..."];
-    NSLog(@"Starting!!");
-    //static entries for home n work, for now
-    CLLocationCoordinate2D home = CLLocationCoordinate2DMake(52.195774, 0.142195);
-    CLLocationCoordinate2D work = CLLocationCoordinate2DMake(52.210644, 0.092504);
+    [self setUpRegionMonitoring];
+//    [self.delegate newStatus:@"Starting..."];
+//    NSLog(@"Starting!!");
+//    
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    
+//    //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
+//    if (![defaults objectForKey:@"home"] || ![defaults objectForKey:@"work"]){
+//        NSLog(@"Home or work not set, not setting up geofences");
+//    }
+//    else {
+//        CLLocationCoordinate2D home;
+//        NSValue *homeValue = [defaults objectForKey:@"home"];
+//        [homeValue getValue:&home];
+//        CLLocationCoordinate2D work;
+//        NSValue *workValue = [defaults objectForKey:@"work"];
+//        [workValue getValue:&work];
+//        
+//        CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home radius:15.0 identifier:@"home"];
+//        CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work radius:15.0 identifier:@"work"];
+//        [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.0];
+//        [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.0];
+//    }
     
-    CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home
-                                                                   radius:15.
-                                                               identifier:@"home"];
-    CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work
-                                                                   radius:15.
-                                                               identifier:@"work"];
-    [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.];
-    [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.];
+//    CLLocationCoordinate2D home = CLLocationCoordinate2DMake(52.195774, 0.142195);
+//    CLLocationCoordinate2D work = CLLocationCoordinate2DMake(52.210644, 0.092504);
+    
+//    CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home
+//                                                                   radius:15.
+//                                                               identifier:@"home"];
+//    CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work
+//                                                                   radius:15.
+//                                                               identifier:@"work"];
+//    [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.];
+//    [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.];
     //why doesn't this display!?
     [self.delegate newStatus:@"Started!"];
     [self.delegate newStatus:[NSString stringWithFormat:@"AuthorizationStatus: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO"]];
@@ -60,9 +81,42 @@
     
     //[self.delegate newStatus:[NSString stringWithFormat:@"Monitored Regions: %i", [_manager.monitoredRegions count]]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [_manager monitoredRegions]]];
+    NSLog(@"Monitored regions: %@", [_manager monitoredRegions]);
     [self.delegate newStatus:[NSString stringWithFormat:@"Loaded at: %@",[NSDate date]]];
     
 
+}
+
+- (void) setUpRegionMonitoring {
+    [self.delegate newStatus:@"Refreshing..."];
+    NSLog(@"Refreshing!");
+    
+    //reset all region monitoring
+    for (CLRegion *region in [_manager monitoredRegions]) {
+        [self.manager stopMonitoringForRegion:region];
+    }
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
+    if (![defaults objectForKey:@"home"] || ![defaults objectForKey:@"work"]){
+        NSLog(@"Home or work not set, not setting up geofences");
+    }
+    else {
+        CLLocationCoordinate2D home;
+        NSValue *homeValue = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"home"]];
+        [homeValue getValue:&home];
+        CLLocationCoordinate2D work;
+        NSValue *workValue = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"work"]];
+        [workValue getValue:&work];
+        
+        CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home radius:15.0 identifier:@"home"];
+        CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work radius:15.0 identifier:@"work"];
+        [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.0];
+        [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.0];
+    }
+    NSLog(@"Monitored regions: %@", [_manager monitoredRegions]);
+    [self.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [_manager monitoredRegions]]];
 }
 
 
@@ -146,6 +200,7 @@
 
 - (void) uploadData
 {
+    //Upload data should not try and upload if no username / password exsist, and notify user.
     [self uploadNextData];
 }
 
