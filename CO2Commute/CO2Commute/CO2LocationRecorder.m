@@ -182,10 +182,10 @@ int const MINGPSACCURACY = 100;
     }
 }
 
-- (void) clearCurrentCommuteLocations
+- (void) removeCurrentCommute
 {
     NSMutableArray *commute = [_loggedLocations lastObject];
-    if ([commute count] > 1) [commute removeAllObjects];
+    if ([commute count] > 1) [_loggedLocations removeLastObject];
 }
 
 - (BOOL) currentCommuteHasLocations

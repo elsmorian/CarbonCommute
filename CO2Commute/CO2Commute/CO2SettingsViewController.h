@@ -14,6 +14,17 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UITextField *urlField;
 
+@property (weak, nonatomic) IBOutlet UITextField *commuteLengthField;
+@property (weak, nonatomic) IBOutlet UITextField *commuteStartField;
+@property (weak, nonatomic) IBOutlet UITextField *commuteEndField;
+@property (nonatomic, retain) IBOutlet UIToolbar *accessoryView;
+
+
+@property (nonatomic, retain) IBOutlet UIDatePicker *lengthInput;
+@property (nonatomic, retain) IBOutlet UIDatePicker *startTimeInput;
+@property (nonatomic, retain) IBOutlet UIDatePicker *endTimeInput;
+
+
 - (IBAction)textFieldEditEnded:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UILabel *loggedLocationsLabel;

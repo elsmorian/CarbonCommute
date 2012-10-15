@@ -7,13 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CCLocationController.h"
 
-@interface CO2MyCommutesViewController : UITableViewController
-//- (IBAction)clearButton:(id)sender;
-//@property (weak, nonatomic) IBOutlet UILabel *numberOfData;
+@interface CO2MyCommutesViewController : UITableViewController <UITableViewDelegate, UIActionSheetDelegate>
+{
+    @private
+    UIActionSheet *sheet;
+    CCLocationController *locControl;
+}
+
 @property (weak, nonatomic) IBOutlet UILabel *currentTimeTaken;
 @property (weak, nonatomic) IBOutlet UILabel *currentDistance;
 @property (weak, nonatomic) IBOutlet UILabel *currentAverageSpeed;
 @property (weak, nonatomic) IBOutlet UILabel *currentNumberOfLocations;
+@property (weak, nonatomic) IBOutlet UILabel *currentNumberOfGoodLocations;
+
+
 
 @end

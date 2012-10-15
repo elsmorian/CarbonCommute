@@ -34,8 +34,43 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *crsid = [defaults objectForKey:@"crsid"];
-    NSString *password = [defaults objectForKey:@"password"];
+    //NSString *password = [defaults objectForKey:@"password"];
     NSString *url = [defaults objectForKey:@"url"];
+    
+    self.accessoryView = [UIToolbar new];
+    self.accessoryView.barStyle = UIBarStyleDefault;
+    [self.accessoryView sizeToFit];
+    UIBarButtonItem *donePickerButton = [[UIBarButtonItem alloc]
+                                    initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                    target:self action:@selector(doneButton:)];
+    NSArray *items = [NSArray arrayWithObjects: donePickerButton, nil];
+    [self.accessoryView setItems:items];
+    
+    self.lengthInput = [[UIDatePicker alloc] init];
+    self.lengthInput.datePickerMode = UIDatePickerModeCountDownTimer;
+    self.lengthInput.minuteInterval = 5;
+    [self.lengthInput setDate:[NSDate dateWithTimeIntervalSince1970:0] animated:YES];
+    self.commuteLengthField.inputView = self.lengthInput;
+    self.commuteLengthField.inputAccessoryView = self.accessoryView;
+    [self.lengthInput addTarget:self action:@selector(lengthChange:) forControlEvents:UIControlEventValueChanged];
+    
+    self.startTimeInput = [[UIDatePicker alloc] init];
+    self.startTimeInput.datePickerMode = UIDatePickerModeTime;
+    self.startTimeInput.minuteInterval = 5;
+    [self.startTimeInput setDate:[NSDate date] animated:YES];
+    self.commuteStartField.inputView = self.startTimeInput;
+    self.commuteStartField.inputAccessoryView = self.accessoryView;
+    [self.startTimeInput addTarget:self action:@selector(startTimeChange:) forControlEvents:UIControlEventValueChanged];
+    
+    self.endTimeInput = [[UIDatePicker alloc] init];
+    self.endTimeInput.datePickerMode = UIDatePickerModeTime;
+    self.endTimeInput.minuteInterval = 5;
+    [self.endTimeInput setDate:[NSDate date] animated:YES];
+    self.commuteEndField.inputView = self.endTimeInput;
+    self.commuteEndField.inputAccessoryView = self.accessoryView;
+    [self.endTimeInput addTarget:self action:@selector(endTimeChange:) forControlEvents:UIControlEventValueChanged];
+
+
     
     NSString *locationsFilePath = [locControl locationRecorderFilePath];
     NSError *attributesError = nil;
@@ -59,41 +94,38 @@
     
     
     [self.crsIDField setText:crsid];
-    [self.passwordField setText:password];
+    //[self.passwordField setText:password];
     [self.urlField setText:url];
     
     [self.crsIDField setDelegate:self];
     [self.passwordField setDelegate:self];
     [self.urlField setDelegate:self];
+    [self.commuteLengthField setDelegate:self];
+    [self.commuteStartField setDelegate:self];
+    [self.commuteEndField setDelegate:self];
     
     [self.loggedDataLabel setText:fileSizeString];
     [self.loggedLocationsLabel setText:locationNumberString];
     [self.loggedCommutesLabel setText:commuteNumberString];
     
     [super viewDidLoad];
-    //[_crsIDField setText:@"Loaded LOL"];
-    //CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //CCLocationController *locControl = [appDelegate getLocController];
-    //NSLog(@"counted %i locatins",[[locControl recorder] count]);
-    //[noLoggedLocationsLabel setText:[NSString stringWithFormat:@"%i",[[locControl recorder] count]]];
-    //[appDelegate _location]
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
 {
     [self setCrsIDField:nil];
     [self setPasswordField:nil];
-    [self setUrlField:nil];
     [self setLoggedLocationsLabel:nil];
     [self setLoggedDataLabel:nil];
     [self setLoggedCommutesLabel:nil];
     [self setLoggedCommutesLabel:nil];
+    [self setUrlField:nil];
+    [self setCommuteLengthField:nil];
+    [self setCommuteStartField:nil];
+    [self setCommuteEndField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -120,6 +152,16 @@
         case 3:
             [theTextField resignFirstResponder];
             return YES;
+        case 4:
+            [theTextField resignFirstResponder];
+            
+            return YES;
+        case 5:
+            [theTextField resignFirstResponder];
+            return YES;
+        case 6:
+            [theTextField resignFirstResponder];
+            return YES;
     }
     return NO;
 }
@@ -140,15 +182,54 @@
         case 2:
             //Password field
             NSLog(@"%i",[sender tag]);
-            [defaults setObject:[self.passwordField text] forKey:@"password"];
+            //[defaults setObject:[self.passwordField text] forKey:@"password"];
             break;
         case 3:
             //URL field
             NSLog(@"%i",[sender tag]);
             [defaults setObject:[self.urlField text] forKey:@"url"];
             break;
+        case 4:
+            //Commute Length field
+            NSLog(@"%i",[sender tag]);
+            break;
+        case 5:
+            //Commute Start field
+            NSLog(@"%i",[sender tag]);
+            break;
+        case 6:
+            //Commute End field
+            NSLog(@"%i",[sender tag]);
+            break;
     }
     [defaults synchronize];
     NSLog(@"Settings saved");
+}
+
+- (void)lengthChange:(id)sender{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"HH:mm"];
+    //df.dateStyle = NSDateFormatterMediumStyle;
+    [self.commuteLengthField setText:[NSString stringWithFormat:@"%@",[df stringFromDate:self.lengthInput.date]]];
+}
+
+- (void)startTimeChange:(id)sender{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"HH:mm"];
+    //df.dateStyle = NSDateFormatterMediumStyle;
+    [self.commuteStartField setText:[NSString stringWithFormat:@"%@",[df stringFromDate:self.startTimeInput.date]]];
+}
+
+- (void)endTimeChange:(id)sender{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"HH:mm"];
+    //df.dateStyle = NSDateFormatterMediumStyle;
+    [self.commuteEndField setText:[NSString stringWithFormat:@"%@",[df stringFromDate:self.endTimeInput.date]]];
+}
+
+- (void)doneButton:(id)sender{
+    [self.commuteLengthField resignFirstResponder];
+    [self.commuteStartField resignFirstResponder];
+    [self.commuteEndField resignFirstResponder];
 }
 @end

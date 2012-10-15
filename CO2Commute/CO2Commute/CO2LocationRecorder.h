@@ -40,7 +40,7 @@ extern int const MINGPSACCURACY;
 - (CLLocation *) getCurrentCommuteLastLocation;
 - (NSArray *) getCurrentCommuteLocations;
 - (void) removeCurrentCommuteLastLocation;
-- (void) clearCurrentCommuteLocations;
+- (void) removeCurrentCommute;
 - (BOOL) currentCommuteHasLocations;
 - (int) countCommutes;
 - (int) countCurrentCommuteLocations;
