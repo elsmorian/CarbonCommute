@@ -112,6 +112,7 @@ int const MINGPSACCURACY = 100;
                                   nil];
     [commute addObject:commuteStats];
     [_loggedLocations addObject:commute];
+    TFLog(@"Created a new commute, and started recording at: %@",[NSDate date]);
 }
 
 - (void) addLocationToCurrentCommute:(CLLocation *)newLocation
@@ -134,9 +135,8 @@ int const MINGPSACCURACY = 100;
     [commuteStats setObject:[[NSDate alloc] init] forKey:@"end"];
     [commuteStats setObject:[[NSNumber alloc] initWithInt:[commute count]-1] forKey:@"locations"];
     [commuteStats setObject:@"OK" forKey:@"status"];
-    //[commute replaceObjectAtIndex:0 withObject:commuteStats];
-    //[_loggedLocations removeLastObject];
-    //[_loggedLocations addObject:commute];
+    TFLog(@"Completed commute and finished recording at: %@",[NSDate date]);
+
     // calculate stats based on commute data like mean median and modal speed, etc and store in first element info dict
 }
 

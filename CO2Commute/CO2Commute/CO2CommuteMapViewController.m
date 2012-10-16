@@ -31,6 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSDate *t1 = [NSDate date];
 
     CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
     CCLocationController *locControl = [appDelegate getLocController];
@@ -60,7 +61,8 @@
 
     [self.mapView addAnnotations:annotations];
     [self.mapView addOverlay:line];
-    
+    NSDate *t2 = [NSDate date];
+    TFLog(@"Commute Map took %f secs to load commute with %i points.",[t2 timeIntervalSinceDate:t1],[CLLocs count]);
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {

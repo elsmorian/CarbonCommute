@@ -31,11 +31,20 @@
 {
     CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
     CCLocationController *locControl = [appDelegate getLocController];
+    defaults = [NSUserDefaults standardUserDefaults];
+
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    hhdf = [[NSDateFormatter alloc] init];
+    [hhdf setDateFormat:@"HH"];
+    mmdf = [[NSDateFormatter alloc] init];
+    [mmdf setDateFormat:@"mm"];
+    
     NSString *crsid = [defaults objectForKey:@"crsid"];
     //NSString *password = [defaults objectForKey:@"password"];
     NSString *url = [defaults objectForKey:@"url"];
+    NSString *commuteLength = [defaults objectForKey:@"commute length"];
+    NSString *commuteStart = [defaults objectForKey:@"commute start"];
+    NSString *commuteEnd = [defaults objectForKey:@"commute end"];
     
     self.accessoryView = [UIToolbar new];
     self.accessoryView.barStyle = UIBarStyleDefault;
@@ -93,9 +102,13 @@
     NSString *commuteNumberString = [[NSString alloc] initWithFormat:@"%i", numberOfCommutes];
     
     
-    [self.crsIDField setText:crsid];
-    //[self.passwordField setText:password];
-    [self.urlField setText:url];
+    if (crsid) [self.crsIDField setText:crsid];
+    //if (password) [self.passwordField setText:password];
+    if (url) [self.urlField setText:url];
+    
+    if (commuteLength) [self.commuteLengthField setText:commuteLength];
+    if (commuteStart) [self.commuteStartField setText:commuteStart];
+    if (commuteEnd) [self.commuteEndField setText:commuteEnd];
     
     [self.crsIDField setDelegate:self];
     [self.passwordField setDelegate:self];
@@ -126,6 +139,7 @@
     [self setCommuteLengthField:nil];
     [self setCommuteStartField:nil];
     [self setCommuteEndField:nil];
+    [self setUseCommuteDetailsSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -172,12 +186,13 @@
 
 
 - (IBAction)textFieldEditEnded:(id)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     switch([sender tag]){
         case 1:
             //CRSid field
             NSLog(@"%i",[sender tag]);
             [defaults setObject:[self.crsIDField text] forKey:@"crsid"];
+            [defaults setObject:[NSString stringWithFormat:@"%@.locker.cam.ac.uk",[self.crsIDField text]] forKey:@"url"];
+            [self.urlField setText:[NSString stringWithFormat:@"%@.locker.cam.ac.uk",[self.crsIDField text]]];
             break;
         case 2:
             //Password field
@@ -207,29 +222,33 @@
 }
 
 - (void)lengthChange:(id)sender{
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"HH:mm"];
-    //df.dateStyle = NSDateFormatterMediumStyle;
-    [self.commuteLengthField setText:[NSString stringWithFormat:@"%@",[df stringFromDate:self.lengthInput.date]]];
+    NSString *commuteLength = [[NSString alloc] initWithFormat:@"%@:%@",
+                                            [hhdf stringFromDate:self.lengthInput.date],
+                                            [mmdf stringFromDate:self.lengthInput.date]];
+    [self.commuteLengthField setText:commuteLength];
+    [defaults setObject:commuteLength forKey:@"commute length"];
 }
 
 - (void)startTimeChange:(id)sender{
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"HH:mm"];
-    //df.dateStyle = NSDateFormatterMediumStyle;
-    [self.commuteStartField setText:[NSString stringWithFormat:@"%@",[df stringFromDate:self.startTimeInput.date]]];
+    NSString *commuteStart = [[NSString alloc] initWithFormat:@"%@:%@",
+                                            [hhdf stringFromDate:self.startTimeInput.date],
+                                            [mmdf stringFromDate:self.startTimeInput.date]];
+    [self.commuteStartField setText:commuteStart];
+    [defaults setObject:commuteStart forKey:@"commute start"];
 }
 
 - (void)endTimeChange:(id)sender{
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"HH:mm"];
-    //df.dateStyle = NSDateFormatterMediumStyle;
-    [self.commuteEndField setText:[NSString stringWithFormat:@"%@",[df stringFromDate:self.endTimeInput.date]]];
+    NSString *commuteEnd = [[NSString alloc] initWithFormat:@"%@:%@",
+                                            [hhdf stringFromDate:self.endTimeInput.date],
+                                            [mmdf stringFromDate:self.endTimeInput.date]];
+    [self.commuteEndField setText:commuteEnd];
+    [defaults setObject:commuteEnd forKey:@"commute end"];
 }
 
 - (void)doneButton:(id)sender{
     [self.commuteLengthField resignFirstResponder];
     [self.commuteStartField resignFirstResponder];
     [self.commuteEndField resignFirstResponder];
+    [defaults synchronize];
 }
 @end

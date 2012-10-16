@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CO2SettingsViewController : UITableViewController <UITextFieldDelegate>
+@interface CO2SettingsViewController : UITableViewController <UITextFieldDelegate>{
+    @private
+    NSDateFormatter *hhdf;
+    NSDateFormatter *mmdf;
+    NSUserDefaults *defaults;
+}
 
 @property (weak, nonatomic) IBOutlet UITextField *crsIDField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
@@ -17,9 +22,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *commuteLengthField;
 @property (weak, nonatomic) IBOutlet UITextField *commuteStartField;
 @property (weak, nonatomic) IBOutlet UITextField *commuteEndField;
+
+
+@property (weak, nonatomic) IBOutlet UISwitch *useCommuteDetailsSwitch;
 @property (nonatomic, retain) IBOutlet UIToolbar *accessoryView;
-
-
 @property (nonatomic, retain) IBOutlet UIDatePicker *lengthInput;
 @property (nonatomic, retain) IBOutlet UIDatePicker *startTimeInput;
 @property (nonatomic, retain) IBOutlet UIDatePicker *endTimeInput;

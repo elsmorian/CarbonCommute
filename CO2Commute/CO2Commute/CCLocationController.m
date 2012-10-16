@@ -37,59 +37,26 @@
 }
 
 - (void) setUp{
-    [self setUpRegionMonitoring];
-//    [self.delegate newStatus:@"Starting..."];
-//    NSLog(@"Starting!!");
-//    
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    
-//    //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
-//    if (![defaults objectForKey:@"home"] || ![defaults objectForKey:@"work"]){
-//        NSLog(@"Home or work not set, not setting up geofences");
-//    }
-//    else {
-//        CLLocationCoordinate2D home;
-//        NSValue *homeValue = [defaults objectForKey:@"home"];
-//        [homeValue getValue:&home];
-//        CLLocationCoordinate2D work;
-//        NSValue *workValue = [defaults objectForKey:@"work"];
-//        [workValue getValue:&work];
-//        
-//        CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home radius:15.0 identifier:@"home"];
-//        CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work radius:15.0 identifier:@"work"];
-//        [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.0];
-//        [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.0];
-//    }
+    TFLog(@"Setting up app...");
+    TFLog(@"Location AuthorizationS tatus: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO");
+    TFLog(@"Location Services Enabled: %@", CLLocationManager.locationServicesEnabled ? @"YES" : @"NO");
+    TFLog(@"Region Monitoring Avalible: %@", CLLocationManager.regionMonitoringAvailable ? @"YES" : @"NO");
+    TFLog(@"Region Monitoring Enabled: %@", CLLocationManager.regionMonitoringEnabled? @"YES" : @"NO");
     
-//    CLLocationCoordinate2D home = CLLocationCoordinate2DMake(52.195774, 0.142195);
-//    CLLocationCoordinate2D work = CLLocationCoordinate2DMake(52.210644, 0.092504);
-    
-//    CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home
-//                                                                   radius:15.
-//                                                               identifier:@"home"];
-//    CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work
-//                                                                   radius:15.
-//                                                               identifier:@"work"];
-//    [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.];
-//    [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.];
-    //why doesn't this display!?
-    [self.delegate newStatus:@"Started!"];
-    [self.delegate newStatus:[NSString stringWithFormat:@"AuthorizationStatus: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO"]];
+    [self.delegate newStatus:@"Starting..."];
+    [self.delegate newStatus:[NSString stringWithFormat:@"Location Authorization Status: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO"]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Location Services Enabled: %@", CLLocationManager.locationServicesEnabled ? @"YES" : @"NO"]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Region Monitoring Avalible: %@", CLLocationManager.regionMonitoringAvailable ? @"YES" : @"NO"]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Region Monitoring Enabled: %@", CLLocationManager.regionMonitoringEnabled? @"YES" : @"NO"]];
-    
-    //[self.delegate newStatus:[NSString stringWithFormat:@"Monitored Regions: %i", [_manager.monitoredRegions count]]];
-    [self.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [_manager monitoredRegions]]];
-    NSLog(@"Monitored regions: %@", [_manager monitoredRegions]);
-    [self.delegate newStatus:[NSString stringWithFormat:@"Loaded at: %@",[NSDate date]]];
-    
 
+    [self setUpRegionMonitoring];
+    
+    TFLog(@"Set up completed at: %@",[NSDate date]);
+    [self.delegate newStatus:[NSString stringWithFormat:@"Set up completed at: %@",[NSDate date]]];
 }
 
 - (void) setUpRegionMonitoring {
-    [self.delegate newStatus:@"Refreshing..."];
-    NSLog(@"Refreshing!");
+    NSLog(@"Setting up region monitoring");
     
     //reset all region monitoring
     for (CLRegion *region in [_manager monitoredRegions]) {
@@ -100,18 +67,20 @@
     
     //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
     if (![defaults objectForKey:@"home lat"] || ![defaults objectForKey:@"work lat"]){
-        NSLog(@"Home or work not set, not setting up geofences");
+        TFLog(@"Not setting geofences: Home Lat/Lng: %@,%@, Work Lat/Lng: %@,%@.",
+              [defaults objectForKey:@"home lat"] ? @"YES" : @"NO", [defaults objectForKey:@"home lng"] ? @"YES" : @"NO",
+              [defaults objectForKey:@"work lat"] ? @"YES" : @"NO", [defaults objectForKey:@"work lng"] ? @"YES" : @"NO");
+        [self.delegate newStatus:[NSString stringWithFormat:@"Home or work not set, not setting up geofences"]];
     }
     else {
         CLLocationCoordinate2D home = CLLocationCoordinate2DMake([[defaults valueForKey:@"home lat"] doubleValue], [[defaults valueForKey:@"home lng"] doubleValue]);
         CLLocationCoordinate2D work = CLLocationCoordinate2DMake([[defaults valueForKey:@"work lat"] doubleValue], [[defaults valueForKey:@"work lng"] doubleValue]);
-        
         CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home radius:15.0 identifier:@"home"];
         CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work radius:15.0 identifier:@"work"];
         [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.0];
         [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.0];
     }
-    NSLog(@"Monitored regions: %@", [_manager monitoredRegions]);
+    TFLog(@"Monitored regions: %@", [_manager monitoredRegions]);
     [self.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [_manager monitoredRegions]]];
 }
 
@@ -121,8 +90,6 @@
 
 - (NSString *) locationRecorderFilePath 
 {
-  //NSString *filePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"locationRecorder.co2"];
-  //NSFileManager *filemgr = [NSFileManager defaultManager];
   NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *docsDir = [dirPaths objectAtIndex:0];
   NSString *dataFilePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"loggedLocations.co2"]];
@@ -152,7 +119,6 @@
 
 - (void) registerHomeLocation
 {
-  //CLLocation *location = self.currentLocation;
   NSLog(@"Got region (%f,%f)", self.currentLocation.coordinate.latitude, self.currentLocation.coordinate.longitude);
   CLRegion *region = [[CLRegion alloc] initCircularRegionWithCenter:self.currentLocation.coordinate 
                                                              radius:10.
@@ -168,9 +134,9 @@
     device.batteryMonitoringEnabled = YES;
     [self.delegate newStatus:[NSString stringWithFormat:@"Started rec at: %@",[NSDate date]]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Battery at: %f",device.batteryLevel]];
+    TFLog(@"Battery Level at: %f",device.batteryLevel);
+    NSLog(@"Started recording at: %@",[NSDate date]);
     device.batteryMonitoringEnabled = NO;
-    //NSLog(@"Dec: %f", device.batteryLevel);
-    
     self.manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
     //self.manager.distanceFilter = ;
     [self.recorder startRecording];
@@ -186,6 +152,8 @@
     device.batteryMonitoringEnabled = YES;
     [self.delegate newStatus:[NSString stringWithFormat:@"Stopped rec at: %@",[NSDate date]]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Battery at: %f",device.batteryLevel]];
+    TFLog(@"Stopped recording at: %@",[NSDate date]);
+    TFLog(@"Battery Level at: %f",device.batteryLevel);
     device.batteryMonitoringEnabled = NO;
     NSLog(@"Stats: %@",[self.recorder getCurrentCommuteStats]);
 }
@@ -197,7 +165,70 @@
 - (void) uploadData
 {
     //Upload data should not try and upload if no username / password exsist, and notify user.
-    [self uploadNextData];
+    //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+    //else:
+    NSArray *locs = self.recorder.loggedLocations;
+    //NSMutableArray *JSONCommute = [[NSMutableArray alloc] init];
+    
+    int index = 0;
+    for (NSArray *commute in locs){
+        NSLog(@"%i",index);
+        NSLog(@"%@",commute[0]);
+        index++;
+    }
+    
+//    index = 0;
+//    for (NSArray *commute in locs){
+//    for (id obj in commute) {
+//        if (index == 0){
+//            NSDictionary *stats = obj;
+//            NSDate *start = [stats objectForKey:@"start"];
+//            NSDate *end = [stats objectForKey:@"end"];
+//            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                                 [stats objectForKey:@"status"], @"status",
+//                                                 [stats objectForKey:@"mean speed"], @"mean speed",
+//                                                 [stats objectForKey:@"modal speed"], @"modal speed",
+//                                                 [stats objectForKey:@"median speed"], @"median speed",
+//                                                 [stats objectForKey:@"max speed"], @"max speed",
+//                                                 [stats objectForKey:@"min speed"], @"min speed",
+//                                                 start.timeIntervalSince1970, @"start",
+//                                                 end.timeIntervalSince1970, @"end",
+//                                                 [stats objectForKey:@"locations"], @"locations", nil];
+//            [JSONCommute addObject:dict];
+//        }
+//        else{
+//            CLLocation *loc = obj;
+//            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                  [[NSNumber alloc] initWithDouble:loc.coordinate.latitude], @"latitude",
+//                                  [[NSNumber alloc] initWithDouble:loc.coordinate.longitude], @"longitude",
+//                                  [[NSNumber alloc] initWithDouble:loc.horizontalAccuracy], @"horizontalAccuracy",
+//                                  [[NSNumber alloc] initWithDouble:loc.speed], @"speed",
+//                                  [[NSNumber alloc] initWithDouble:loc.course], @"course",
+//                                  [[NSNumber alloc] initWithDouble:loc.altitude], @"altitude",
+//                                  [[NSNumber alloc] initWithDouble:loc.verticalAccuracy], @"verticalAccuracy",
+//                                  [[NSNumber alloc] initWithInt: loc.timestamp.timeIntervalSince1970 ], @"id", nil];
+//            [JSONCommute addObject:dict];
+//        }
+//        index++;
+//    }
+//    }
+//
+//    NSError *error;
+//    NSString *jsonStr;
+//    
+//    for (NSDictionary *dict in JSONCommute) {
+//        //Add each object togeth in an array in a String
+//        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+//        jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//        NSLog(@"%@",jsonStr);
+//    }
+
+    
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:JSONCommute options:0 error:&error];
+//    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    NSLog(jsonStr);
+    //[self uploadNextData];
 }
 
 - (void) uploadNextData
@@ -339,7 +370,8 @@
 ///////////
 #pragma mark - NSURLConnectionDelegate methods
 
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
     NSLog(@"CONN: Auth Sent!");
     NSString *username = @"user1";
     NSString *password = @"user1";
@@ -351,7 +383,8 @@
     [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
     //[self.data setLength:0];
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     [self.delegate newStatus:[NSString stringWithFormat:@"CONN: HTTP Code: %i",[httpResponse statusCode]]];
@@ -374,7 +407,8 @@
     }
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)d {
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)d
+{
     //[self.data appendData:d];
     NSString *strData = [[NSString alloc]initWithData:d encoding:NSUTF8StringEncoding];
     //NSString *okays = [[NSString alloc] initWithFormat:@"ok"];
@@ -386,7 +420,8 @@
     //[self.delegate newStatus:[NSString stringWithFormat:@"Rx Data: %@",strData]];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
     NSString *errorTxt = [error localizedDescription];
     [self.delegate newStatus:[NSString stringWithFormat:@"CONN: ConnectionError: %@", errorTxt]];
     //NSLog(@"CONN: Rx Error");
@@ -402,10 +437,7 @@
   NSLog(@"Did start monitoring for region: '%@'", region.identifier);
   [self.delegate newStatus:[NSString stringWithFormat:@"Started Mon for %@, at %@",region.identifier, [NSDate date]]];
   //[self.delegate newStatus:[NSString stringWithFormat:@"AuthorizationStatus: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO"]];
-  //[self.delegate locationController:self newStatus:@"-------------------------"];
-  //[self.delegate newStatus:@"Started monitoring region"];
-  //[self.delegate locationController:self newStatus:@"Good luck"];
-  //[self.delegate locationController:self newStatus:@"-------------------------"];
+
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region

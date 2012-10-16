@@ -12,7 +12,8 @@
 
 @synthesize title, coordinate;
 
-- (id)initWithTitle:(NSString *)ttl andCoordinate:(CLLocationCoordinate2D)c2d {
+- (id)initWithTitle:(NSString *)ttl andCoordinate:(CLLocationCoordinate2D)c2d
+{
     self = [super init];
     title = ttl;
     coordinate = c2d;

@@ -9,7 +9,8 @@
 #import "CO2AppDelegate.h"
 #import "CCLocationController.h"
 #import "CO2RootViewController.h"
-//#import "CO2SettingsViewController.h"
+
+#define TESTING 1
 
 @implementation CO2AppDelegate
 
@@ -22,16 +23,22 @@
     //self.window.backgroundColor = [UIColor whiteColor];
     //[self.window makeKeyAndVisible];
   
-  _locationController = [[CCLocationController alloc] init];
+    _locationController = [[CCLocationController alloc] init];
   
-  // Nasty stuff to let the main view controller know about the controller.
-  UINavigationController *navController = (UINavigationController *) self.window.rootViewController;
-  CO2RootViewController *rootVC = [[navController viewControllers] objectAtIndex:0];
-  rootVC.locationController = _locationController;
-  _locationController.delegate = rootVC;
-  //CO2SettingsViewController *settingsVC =
+    // Nasty stuff to let the main view controller know about the controller.
+    UINavigationController *navController = (UINavigationController *) self.window.rootViewController;
+    CO2RootViewController *rootVC = [[navController viewControllers] objectAtIndex:0];
+    rootVC.locationController = _locationController;
+    _locationController.delegate = rootVC;
+    
+    //Configure TestFlight Integration
+    #ifdef TESTING
+        [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+    #endif
+    [TestFlight takeOff:@"a4976ae5b04e2fb808ad7260a8f510eb_MTQyMjU2MjAxMi0xMC0xNSAwODoyMjowMS40NDgyOTY"];
+    TFLog(@"App did launch with options: %@",launchOptions);
 
-  return YES;
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
