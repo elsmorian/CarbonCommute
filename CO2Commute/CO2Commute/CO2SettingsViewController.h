@@ -39,6 +39,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *loggedDataLabel;
 @property (weak, nonatomic) IBOutlet UILabel *loggedCommutesLabel;
 
+- (IBAction)manualLogging:(UISwitch *)sender;
+
 - (void)saveSettings:(int)tag;
 
 @end

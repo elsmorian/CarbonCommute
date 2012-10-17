@@ -39,18 +39,31 @@
 
 - (void) setUp{
     TFLog(@"Setting up app...");
-    TFLog(@"Location AuthorizationS tatus: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO");
     TFLog(@"Location Services Enabled: %@", CLLocationManager.locationServicesEnabled ? @"YES" : @"NO");
     TFLog(@"Region Monitoring Avalible: %@", CLLocationManager.regionMonitoringAvailable ? @"YES" : @"NO");
     TFLog(@"Region Monitoring Enabled: %@", CLLocationManager.regionMonitoringEnabled? @"YES" : @"NO");
+   
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    if ([def objectForKey:@"first run complete"] == nil){
+        //Bit of a hack to trigger location authentication alert at the start of app use, before getting to the maps.
+        [_manager startUpdatingLocation];
+        [_manager stopUpdatingLocation];
+        
+        [def setObject:@"Yes" forKey:@"first run complete"];
+        TFLog(@"First run setup complete");
+    }
+    TFLog(@"Location Authorization Status: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO");
+
     
     [self.delegate newStatus:@"Starting..."];
     [self.delegate newStatus:[NSString stringWithFormat:@"Location Authorization Status: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO"]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Location Services Enabled: %@", CLLocationManager.locationServicesEnabled ? @"YES" : @"NO"]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Region Monitoring Avalible: %@", CLLocationManager.regionMonitoringAvailable ? @"YES" : @"NO"]];
     [self.delegate newStatus:[NSString stringWithFormat:@"Region Monitoring Enabled: %@", CLLocationManager.regionMonitoringEnabled? @"YES" : @"NO"]];
-
-    [self setUpRegionMonitoring];
+    
+    if (CLLocationManager.authorizationStatus && CLLocationManager.locationServicesEnabled && CLLocationManager.regionMonitoringAvailable && CLLocationManager.regionMonitoringEnabled){
+        [self setUpRegionMonitoring];
+    }
     
     TFLog(@"Set up completed at: %@",[NSDate date]);
     [self.delegate newStatus:[NSString stringWithFormat:@"Set up completed at: %@",[NSDate date]]];
@@ -60,6 +73,7 @@
     NSLog(@"Setting up region monitoring");
     
     //reset all region monitoring
+    NSLog(@"Currently: %@", [_manager monitoredRegions]);
     for (CLRegion *region in [_manager monitoredRegions]) {
         [self.manager stopMonitoringForRegion:region];
     }
@@ -69,7 +83,7 @@
     if ([[NSString stringWithFormat:@"%@",[defaults objectForKey:@"enable tracking"]] isEqualToString:@"No"]) {
         TFLog(@"Not setting geofences: User specified no tracking");
     }
-    else if (![defaults objectForKey:@"home lat"] || ![defaults objectForKey:@"work lat"]){
+    else if ([defaults objectForKey:@"home lat"] == nil || [defaults objectForKey:@"work lat"] == nil){
         TFLog(@"Not setting geofences: Home Lat/Lng: %@,%@, Work Lat/Lng: %@,%@.",
               [defaults objectForKey:@"home lat"] ? @"YES" : @"NO", [defaults objectForKey:@"home lng"] ? @"YES" : @"NO",
               [defaults objectForKey:@"work lat"] ? @"YES" : @"NO", [defaults objectForKey:@"work lng"] ? @"YES" : @"NO");
@@ -80,11 +94,11 @@
         CLLocationCoordinate2D work = CLLocationCoordinate2DMake([[defaults valueForKey:@"work lat"] doubleValue], [[defaults valueForKey:@"work lng"] doubleValue]);
         CLRegion *homeRegion = [[CLRegion alloc] initCircularRegionWithCenter:home radius:15.0 identifier:@"home"];
         CLRegion *workRegion = [[CLRegion alloc] initCircularRegionWithCenter:work radius:15.0 identifier:@"work"];
-        [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.0];
-        [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.0];
+        NSLog(@"attempting region monitoring");
+        [self.delegate newStatus:[NSString stringWithFormat:@"attempting region monitoring"]];
+        [self.manager startMonitoringForRegion:homeRegion];
+        [self.manager startMonitoringForRegion:workRegion];
     }
-    [self.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [_manager monitoredRegions]]];
-    TFLog(@"Monitored regions: %@", [_manager monitoredRegions]);
 
 }
 
@@ -151,7 +165,8 @@
 {
     [self.manager stopUpdatingLocation];
     [self.recorder stopRecording];
-    
+    [self saveLocationRecorder];
+
     UIDevice *device = [UIDevice currentDevice];
     device.batteryMonitoringEnabled = YES;
     [self.delegate newStatus:[NSString stringWithFormat:@"Stopped rec at: %@",[NSDate date]]];
@@ -163,7 +178,13 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([[NSString stringWithFormat:@"%@",[defaults objectForKey:@"enable auto-upload"]] isEqualToString:@"Yes"]) {
+        [self.delegate newStatus:[NSString stringWithFormat:@"attempting auto-upload"]];
+        TFLog(@"Attempting auto-upload");
         [self uploadData];
+    }
+    else {
+        [self.delegate newStatus:[NSString stringWithFormat:@"Auto-upload not set, not uploading."]];
+        TFLog(@"Auto-upload not set, not uploading.");
     }
 }
 
@@ -176,10 +197,9 @@
     //Upload data should not try and upload if no username / password exsist, and notify user.
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     TFLog(@"UPLOAD: Attempting commute upload...");
-    
-//    NSLog(@"%@",[defaults objectForKey:@"url"]);
-//    NSLog(@"%@",[defaults objectForKey:@"user"]);
-    if (![defaults objectForKey:@"url"] || ![defaults objectForKey:@"crsid"]) {
+    [self.delegate newStatus:[NSString stringWithFormat:@"attempting commute upload..."]];
+
+    if ([defaults objectForKey:@"url"] == nil || [defaults objectForKey:@"crsid"] == nil) {
         //display alert
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Error: No Locker Authentication Information"
                                                         message:@"Please enter your locker username and password in the app settings."
@@ -197,13 +217,14 @@
             NSLog(@"%@", commuteStats);
             
             id objStart = [commuteStats objectForKey:@"start"];
-            if ([objStart isMemberOfClass:[NSDate class]]){
+            //if ([objStart isMemberOfClass:[NSDate class]]){
                 NSDate *start = objStart;
                 [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"start"];
                 [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"id"];
                 NSDate *end = [commuteStats objectForKey:@"end"];
                 [commuteStats setObject:[[NSNumber alloc] initWithInt:[end timeIntervalSince1970]] forKey:@"end"];
-            }
+            //}
+            NSLog(@"%@", commuteStats);
             
             NSMutableArray *commuteLocations = [[NSMutableArray alloc] initWithArray:[commute objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, commute.count-1)]]];
             NSMutableArray *routeDict = [[NSMutableArray alloc] init];
@@ -226,19 +247,35 @@
                                       
             NSString *jsonStr;
             NSError *error;
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDict options:0 error:&error];
-            jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            if (![NSJSONSerialization isValidJSONObject: dataDict]){
+                TFLog(@"JSON ERROR: Not a valid JSON Object");
+                [self.delegate newStatus:[NSString stringWithFormat:@"JSON ERROR: Not a valid JSON Object"]];
+            }
+            else {
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDict options:0 error:&error];
+                if (error) {
+                    TFLog(@"JSON ERROR: %@",error);
+                    [self.delegate newStatus:[NSString stringWithFormat:@"JSON ERROR: %@",error]];
+                }
+                else {
+                    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/push/test2",[defaults objectForKey:@"url"]]];
-            
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-            [request setHTTPMethod:@"POST"];
-            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            [request setHTTPBody:[NSData dataWithBytes:[jsonStr UTF8String] length:[jsonStr length]]];
-            
-            TFLog(@"Upload of %i points took %f secs to assemble.",[routeDict count],[[NSDate date] timeIntervalSinceDate:ts1]);
-
-            [NSURLConnection connectionWithRequest:request delegate:self];
+                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/push/test3",[defaults objectForKey:@"url"]]];
+                    
+                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+                    [request setHTTPMethod:@"POST"];
+                    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                    [request setHTTPBody:[NSData dataWithBytes:[jsonStr UTF8String] length:[jsonStr length]]];
+                    
+                    TFLog(@"Upload of %i points took %f secs to assemble.",[routeDict count],[[NSDate date] timeIntervalSinceDate:ts1]);
+                    [self.delegate newStatus:[NSString stringWithFormat:@"Upload of %i points took %f secs to assemble.",[routeDict count],[[NSDate date] timeIntervalSinceDate:ts1]]];
+                    [NSURLConnection connectionWithRequest:request delegate:self];
+                }
+            }
+        }
+        else{
+            [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Failed: No commutes to upload!"]];
+            TFLog(@"UPLOAD: Failed: No commutes to upload!");
         }
     }
 }
@@ -253,6 +290,11 @@
 - (void) stopTracking
 {
     [self stopRecording];
+}
+
+- (NSSet *) getMonitoredRegions
+{
+    return [self.manager monitoredRegions];
 }
 
 
@@ -298,6 +340,7 @@
     NSString *strData = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     if ([strData isEqualToString:@"ok"]) {
         TFLog(@"UPLOAD: Successfull upload");
+        [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Successfull upload"]];
         
         [self.recorder.loggedLocations removeLastObject];
         [self saveLocationRecorder];
@@ -306,6 +349,7 @@
         else TFLog(@"UPLOAD: All commutes uploaded.");
     }
     else TFLog(@"UPLOAD: Bad responce, will retry later.");
+    [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Bad responce, will retry later."]];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -313,6 +357,7 @@
     NSString *errorTxt = [error localizedDescription];
     [self.delegate newStatus:[NSString stringWithFormat:@"CONN: ConnectionError: %@", errorTxt]];
     TFLog(@"UPLOAD: Connection error: %@", errorTxt);
+    [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Connection error: %@", errorTxt]];
 }
 
 
@@ -322,8 +367,20 @@
 
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
-  NSLog(@"Did start monitoring for region: '%@'", region.identifier);
+  TFLog(@"Did start monitoring for region: '%@'", region.identifier);
   [self.delegate newStatus:[NSString stringWithFormat:@"Started Mon for %@, at %@",region.identifier, [NSDate date]]];
+}
+
+- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
+{
+    TFLog(@"Did fail to monitor for region: '%@' due to: %@", region.identifier, [error localizedDescription]);
+    [self.delegate newStatus:[NSString stringWithFormat:@"Did fail to monitor for region: '%@' due to: %@", region.identifier, [error localizedDescription]]];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    TFLog(@"Changed location auth status: '%i'", status);
+    [self.delegate newStatus:[NSString stringWithFormat:@"Changed location auth status: '%i'", status]];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region

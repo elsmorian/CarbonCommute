@@ -34,34 +34,36 @@
     CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
     locControl = [appDelegate getLocController];
     NSArray *locs = [[locControl recorder] getCurrentCommuteLocations];
-    CLLocation *first = locs[0];
-    CLLocation *last = locs[[locs count]-1];
-    int goodLocs = 0;
-    float speed = 0.0;
-    float distance = 0.0;
-    int index = 1;
     
-    for (CLLocation *loc in locs) {
-        speed += loc.speed;
-        if (index < [locs count]) {
-            CLLocation *nextLoc = locs[index];
-            distance += [nextLoc distanceFromLocation:loc]/1000;
-            index++;
+    if (locs){
+        CLLocation *first = locs[0];
+        CLLocation *last = locs[[locs count]-1];
+        int goodLocs = 0;
+        float speed = 0.0;
+        float distance = 0.0;
+        int index = 1;
+        
+        for (CLLocation *loc in locs) {
+            speed += loc.speed;
+            if (index < [locs count]) {
+                CLLocation *nextLoc = locs[index];
+                distance += [nextLoc distanceFromLocation:loc]/1000;
+                index++;
+            }
+            if (loc.horizontalAccuracy <= 10.0) goodLocs++;
         }
-        if (loc.horizontalAccuracy <= 10.0) goodLocs++;
-    }
-    speed = speed / [locs count];
-    speed = speed / 1000*3600;
-    
-    NSTimeInterval interval = [last.timestamp timeIntervalSinceDate:first.timestamp];
-    int minutes = floor(interval/60);
+        speed = speed / [locs count];
+        speed = speed / 1000*3600;
+        
+        NSTimeInterval interval = [last.timestamp timeIntervalSinceDate:first.timestamp];
+        int minutes = floor(interval/60);
 
-    [_currentNumberOfGoodLocations setText:[NSString stringWithFormat:@"%i",goodLocs]];
-    [_currentNumberOfLocations setText:[NSString stringWithFormat:@" / %i",[[locControl recorder] countCurrentCommuteLocations]]];
-    [_currentAverageSpeed setText:[NSString stringWithFormat:@"%.1f km/hr",speed]];
-    [_currentTimeTaken setText:[NSString stringWithFormat:@"%i Minutes",minutes]];
-    [_currentDistance setText:[NSString stringWithFormat:@"%.1f km",distance]];
-    
+        [_currentNumberOfGoodLocations setText:[NSString stringWithFormat:@"%i",goodLocs]];
+        [_currentNumberOfLocations setText:[NSString stringWithFormat:@" / %i",[[locControl recorder] countCurrentCommuteLocations]]];
+        [_currentAverageSpeed setText:[NSString stringWithFormat:@"%.1f km/hr",speed]];
+        [_currentTimeTaken setText:[NSString stringWithFormat:@"%i Minutes",minutes]];
+        [_currentDistance setText:[NSString stringWithFormat:@"%.1f km",distance]];
+    }
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  

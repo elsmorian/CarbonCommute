@@ -39,14 +39,19 @@
     
     //if home or work are missing, don't load points
     
-    if (![defaults objectForKey:@"home lat"]) {
+//    NSLog(@"loading pins..");
+//    NSLog(@"%@",[defaults objectForKey:@"home lat"]);
+//    NSLog(@"%@",[defaults objectForKey:@"work lat"]);
+    if ([defaults objectForKey:@"home lat"] != nil) {
+        NSLog(@"got home");
         CLLocationCoordinate2D home = CLLocationCoordinate2DMake([[defaults valueForKey:@"home lat"] doubleValue], [[defaults valueForKey:@"home lng"] doubleValue]);
         MKPointAnnotation *homeAnnot = [[MKPointAnnotation alloc] init];
         homeAnnot.coordinate = home;
         homeAnnot.title = @"Home";
         [_map addAnnotation:homeAnnot];
     }
-    if (![defaults objectForKey:@"work lat"]) {
+    if ([defaults objectForKey:@"work lat"] != nil) {
+        NSLog(@"got work");
         CLLocationCoordinate2D work = CLLocationCoordinate2DMake([[defaults valueForKey:@"work lat"] doubleValue], [[defaults valueForKey:@"work lng"] doubleValue]);
         MKPointAnnotation *workAnnot = [[MKPointAnnotation alloc] init];
         workAnnot.coordinate = work;
@@ -139,6 +144,8 @@
         }
         [defaults setObject:lat forKey:@"home lat"];
         [defaults setObject:lng forKey:@"home lng"];
+        [defaults synchronize];
+        NSLog(@"added home");
         [_map addAnnotation:annot];
     }
     if (buttonIndex == 1){
@@ -152,10 +159,13 @@
         }
         [defaults setObject:lat forKey:@"work lat"];
         [defaults setObject:lng forKey:@"work lng"];
+        [defaults synchronize];
+        NSLog(@"added work");
         [_map addAnnotation:annot];
     }
-    [defaults synchronize];
-    [locControl setUpRegionMonitoring];
+    if ([defaults objectForKey:@"home lat"] != nil && [defaults objectForKey:@"work lat"] != nil) {
+        [locControl setUpRegionMonitoring];
+    }
 }
 
 @end

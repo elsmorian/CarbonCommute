@@ -52,12 +52,12 @@ int const MINGPSACCURACY = 100;
 - (void) notifyOfNewLocation:(CLLocation *)newLocation
 {
   if (_activelyMeasuringLocation) {
-      NSLog(@"loc");
+      NSLog(@"New Location.. %f accuracy", newLocation.horizontalAccuracy);
       if (newLocation.horizontalAccuracy < MINGPSACCURACY) { //Ignore all locations with 100m accuracy or worse
           CLLocation *oldLocation = [self getCurrentCommuteLastLocation];
           if (!oldLocation) { //if first new location, add it whatever.
               [self addLocationToCurrentCommute:newLocation];
-              //NSLog(@"+ location!");
+              NSLog(@"First new location!");
           }
           else {
               // if new Location comes >5 seconds after previous, treat as new point.
@@ -65,11 +65,11 @@ int const MINGPSACCURACY = 100;
               //NSTimeInterval interval = 5;
               if ([newLocation.timestamp timeIntervalSinceDate:oldLocation.timestamp] > GPSINTERVAL){
                   [self addLocationToCurrentCommute:newLocation];
-                  //NSLog(@"+ location!");
+                  NSLog(@"GPS interval passed, added location!");
               }
               else if (newLocation.horizontalAccuracy < oldLocation.horizontalAccuracy){
                   [self currentCommuteReplaceLastLocation:newLocation];
-                  //NSLog(@"+, Got better Accuracy");
+                  //NSLog(@"Got better Accuracy, location updated");
               }
           }
           //NSLog(@"GOTLOC w/ %f accuracy:",location.horizontalAccuracy);
@@ -138,6 +138,7 @@ int const MINGPSACCURACY = 100;
     TFLog(@"Completed commute and finished recording at: %@",[NSDate date]);
 
     // calculate stats based on commute data like mean median and modal speed, etc and store in first element info dict
+    
 }
 
 ///////////
@@ -168,6 +169,7 @@ int const MINGPSACCURACY = 100;
 - (NSArray *) getCurrentCommuteLocations
 {
     NSArray *commute = [_loggedLocations lastObject];
+    if (commute == nil) return nil;
     int len = [commute count];
     if (len == 1) return nil;
     return [commute subarrayWithRange:NSMakeRange(1, len-1)];

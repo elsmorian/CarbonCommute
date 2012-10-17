@@ -123,6 +123,9 @@
     [self.loggedLocationsLabel setText:locationNumberString];
     [self.loggedCommutesLabel setText:commuteNumberString];
     
+    [locControl.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [locControl getMonitoredRegions]]];
+    TFLog(@"Monitored regions: %@", [locControl getMonitoredRegions]);
+    
     [super viewDidLoad];
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -210,6 +213,19 @@
     }
     [defaults synchronize];
 
+}
+
+- (IBAction)manualLogging:(UISwitch *)sender {
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CCLocationController *locControl = [appDelegate getLocController];
+    if (sender.on){
+        NSLog(@"MANUAL LOGGING STARTED");
+        [locControl startTracking];
+    }
+    else {
+        NSLog(@"MANUAL LOGGING STOPPED");
+        [locControl stopTracking];
+    }
 }
 
 - (void)saveSettings:(int)tag {

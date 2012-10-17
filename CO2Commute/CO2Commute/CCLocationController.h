@@ -30,5 +30,6 @@
 - (void) startTracking;
 - (void) stopTracking;
 - (void) uploadData;
+- (NSSet *) getMonitoredRegions;
 
 @end
