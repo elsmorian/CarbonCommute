@@ -10,6 +10,7 @@
 #import "CO2AppDelegate.h"
 #import "CCLocationController.h"
 #import "CO2LocationRecorder.h"
+#import "PDKeychainBindings.h"
 
 @interface CO2SettingsViewController ()
 
@@ -39,8 +40,9 @@
     mmdf = [[NSDateFormatter alloc] init];
     [mmdf setDateFormat:@"mm"];
     
+    PDKeychainBindings *keyChain = [PDKeychainBindings sharedKeychainBindings];
+    NSString *password = [keyChain objectForKey:@"password"];
     NSString *crsid = [defaults objectForKey:@"crsid"];
-    //NSString *password = [defaults objectForKey:@"password"];
     NSString *url = [defaults objectForKey:@"url"];
     NSString *commuteLength = [defaults objectForKey:@"commute length"];
     NSString *commuteStart = [defaults objectForKey:@"commute start"];
@@ -103,7 +105,7 @@
     
     
     if (crsid) [self.crsIDField setText:crsid];
-    //if (password) [self.passwordField setText:password];
+    if (password) [self.passwordField setText:password];
     if (url) [self.urlField setText:url];
     
     if (commuteLength) [self.commuteLengthField setText:commuteLength];
@@ -139,7 +141,6 @@
     [self setCommuteLengthField:nil];
     [self setCommuteStartField:nil];
     [self setCommuteEndField:nil];
-    [self setUseCommuteDetailsSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -153,6 +154,7 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    //[self saveSettings:theTextField.tag];
     switch (theTextField.tag){
         case 1:
              //CRSid field
@@ -168,7 +170,6 @@
             return YES;
         case 4:
             [theTextField resignFirstResponder];
-            
             return YES;
         case 5:
             [theTextField resignFirstResponder];
@@ -181,44 +182,84 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)theTextField {
-    NSLog(@"%i finished editiing",theTextField.tag);
+    //NSLog(@"%i finished editiing",theTextField.tag);
+    [self saveSettings:theTextField.tag];
 }
 
 
 - (IBAction)textFieldEditEnded:(id)sender {
-    switch([sender tag]){
-        case 1:
-            //CRSid field
-            NSLog(@"%i",[sender tag]);
-            [defaults setObject:[self.crsIDField text] forKey:@"crsid"];
-            [defaults setObject:[NSString stringWithFormat:@"%@.locker.cam.ac.uk",[self.crsIDField text]] forKey:@"url"];
-            [self.urlField setText:[NSString stringWithFormat:@"%@.locker.cam.ac.uk",[self.crsIDField text]]];
-            break;
-        case 2:
-            //Password field
-            NSLog(@"%i",[sender tag]);
-            //[defaults setObject:[self.passwordField text] forKey:@"password"];
-            break;
-        case 3:
-            //URL field
-            NSLog(@"%i",[sender tag]);
-            [defaults setObject:[self.urlField text] forKey:@"url"];
-            break;
-        case 4:
-            //Commute Length field
-            NSLog(@"%i",[sender tag]);
-            break;
-        case 5:
-            //Commute Start field
-            NSLog(@"%i",[sender tag]);
-            break;
-        case 6:
-            //Commute End field
-            NSLog(@"%i",[sender tag]);
-            break;
+    [self saveSettings:[sender tag]];
+}
+
+- (IBAction)autoUploadSwitchToggled:(UISwitch *)sender {
+    if (sender.on){
+        [defaults setObject:@"Yes" forKey:@"enable auto-upload"];
+    }
+    else {
+        [defaults setObject:@"No" forKey:@"enable auto-upload"];
     }
     [defaults synchronize];
-    NSLog(@"Settings saved");
+}
+
+- (IBAction)useCommuteDetailsSwitch:(UISwitch *)sender {
+    if (sender.on){
+        [defaults setObject:@"Yes" forKey:@"enable commute-details"];
+    }
+    else {
+        [defaults setObject:@"No" forKey:@"enable commute-details"];
+    }
+    [defaults synchronize];
+
+}
+
+- (void)saveSettings:(int)tag {
+    switch(tag){
+        case 1: {
+            //CRSid field
+            if ([[self.crsIDField text] length] > 0){
+                [defaults setObject:[self.crsIDField text] forKey:@"crsid"];
+                [defaults setObject:[NSString stringWithFormat:@"%@.locker.cam.ac.uk",[self.crsIDField text]] forKey:@"url"];
+                [self.urlField setText:[NSString stringWithFormat:@"%@.locker.cam.ac.uk",[self.crsIDField text]]];
+            }
+            else {
+                [self.urlField setText:[NSString stringWithFormat:@""]];
+                [defaults removeObjectForKey:@"url"];
+                [defaults removeObjectForKey:@"crsid"];
+            }
+            break;
+        }
+        case 2: {
+            //Password field
+            if ([[self.passwordField text] length] > 0){
+                PDKeychainBindings *keyChain = [PDKeychainBindings sharedKeychainBindings];
+                [keyChain setObject:[self.passwordField text] forKey:@"password"];
+                break;
+            }
+        }
+        case 3: {
+            //URL field
+            //NSLog(@"%i",[sender tag]);
+            [defaults setObject:[self.urlField text] forKey:@"url"];
+            break;
+        }
+        case 4: {
+            //Commute Length field
+            //NSLog(@"%i",[sender tag]);
+            break;
+        }
+        case 5: {
+            //Commute Start field
+            //NSLog(@"%i",[sender tag]);
+            break;
+        }
+        case 6: {
+            //Commute End field
+            //NSLog(@"%i",[sender tag]);
+            break;
+        }
+    }
+    [defaults synchronize];
+    //NSLog(@"Settings saved");
 }
 
 - (void)lengthChange:(id)sender{

@@ -29,7 +29,6 @@
 - (void) setUpRegionMonitoring;
 - (void) startTracking;
 - (void) stopTracking;
-- (void) uploadNextData;
 - (void) uploadData;
 
 @end

@@ -24,7 +24,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *commuteEndField;
 
 
-@property (weak, nonatomic) IBOutlet UISwitch *useCommuteDetailsSwitch;
 @property (nonatomic, retain) IBOutlet UIToolbar *accessoryView;
 @property (nonatomic, retain) IBOutlet UIDatePicker *lengthInput;
 @property (nonatomic, retain) IBOutlet UIDatePicker *startTimeInput;
@@ -32,9 +31,14 @@
 
 
 - (IBAction)textFieldEditEnded:(id)sender;
+- (IBAction)autoUploadSwitchToggled:(UISwitch *)sender;
+- (IBAction)useCommuteDetailsSwitch:(UISwitch *)sender;
+
 
 @property (weak, nonatomic) IBOutlet UILabel *loggedLocationsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *loggedDataLabel;
 @property (weak, nonatomic) IBOutlet UILabel *loggedCommutesLabel;
+
+- (void)saveSettings:(int)tag;
 
 @end

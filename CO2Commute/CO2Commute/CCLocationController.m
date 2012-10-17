@@ -9,6 +9,7 @@
 #import "CCLocationController.h"
 #import "CO2LocationRecorder.h"
 #import "CO2Locaton.h"
+#import "PDKeychainBindings.h"
 
 @implementation CCLocationController
 @synthesize manager = _manager;
@@ -62,11 +63,13 @@
     for (CLRegion *region in [_manager monitoredRegions]) {
         [self.manager stopMonitoringForRegion:region];
     }
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     //if home or work are missing, don't start monitoring. If they are there, do start monitoring!
-    if (![defaults objectForKey:@"home lat"] || ![defaults objectForKey:@"work lat"]){
+    if ([[NSString stringWithFormat:@"%@",[defaults objectForKey:@"enable tracking"]] isEqualToString:@"No"]) {
+        TFLog(@"Not setting geofences: User specified no tracking");
+    }
+    else if (![defaults objectForKey:@"home lat"] || ![defaults objectForKey:@"work lat"]){
         TFLog(@"Not setting geofences: Home Lat/Lng: %@,%@, Work Lat/Lng: %@,%@.",
               [defaults objectForKey:@"home lat"] ? @"YES" : @"NO", [defaults objectForKey:@"home lng"] ? @"YES" : @"NO",
               [defaults objectForKey:@"work lat"] ? @"YES" : @"NO", [defaults objectForKey:@"work lng"] ? @"YES" : @"NO");
@@ -80,8 +83,9 @@
         [self.manager startMonitoringForRegion:homeRegion desiredAccuracy:5.0];
         [self.manager startMonitoringForRegion:workRegion desiredAccuracy:5.0];
     }
-    TFLog(@"Monitored regions: %@", [_manager monitoredRegions]);
     [self.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [_manager monitoredRegions]]];
+    TFLog(@"Monitored regions: %@", [_manager monitoredRegions]);
+
 }
 
 
@@ -156,6 +160,11 @@
     TFLog(@"Battery Level at: %f",device.batteryLevel);
     device.batteryMonitoringEnabled = NO;
     NSLog(@"Stats: %@",[self.recorder getCurrentCommuteStats]);
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([[NSString stringWithFormat:@"%@",[defaults objectForKey:@"enable auto-upload"]] isEqualToString:@"Yes"]) {
+        [self uploadData];
+    }
 }
 
 
@@ -165,194 +174,74 @@
 - (void) uploadData
 {
     //Upload data should not try and upload if no username / password exsist, and notify user.
-    //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-    //else:
-    NSArray *locs = self.recorder.loggedLocations;
-    //NSMutableArray *JSONCommute = [[NSMutableArray alloc] init];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    TFLog(@"UPLOAD: Attempting commute upload...");
     
-    int index = 0;
-    for (NSArray *commute in locs){
-        NSLog(@"%i",index);
-        NSLog(@"%@",commute[0]);
-        index++;
+//    NSLog(@"%@",[defaults objectForKey:@"url"]);
+//    NSLog(@"%@",[defaults objectForKey:@"user"]);
+    if (![defaults objectForKey:@"url"] || ![defaults objectForKey:@"crsid"]) {
+        //display alert
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Error: No Locker Authentication Information"
+                                                        message:@"Please enter your locker username and password in the app settings."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        TFLog(@"UPLOAD: Failed: No authentication information present");
     }
-    
-//    index = 0;
-//    for (NSArray *commute in locs){
-//    for (id obj in commute) {
-//        if (index == 0){
-//            NSDictionary *stats = obj;
-//            NSDate *start = [stats objectForKey:@"start"];
-//            NSDate *end = [stats objectForKey:@"end"];
-//            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                                 [stats objectForKey:@"status"], @"status",
-//                                                 [stats objectForKey:@"mean speed"], @"mean speed",
-//                                                 [stats objectForKey:@"modal speed"], @"modal speed",
-//                                                 [stats objectForKey:@"median speed"], @"median speed",
-//                                                 [stats objectForKey:@"max speed"], @"max speed",
-//                                                 [stats objectForKey:@"min speed"], @"min speed",
-//                                                 start.timeIntervalSince1970, @"start",
-//                                                 end.timeIntervalSince1970, @"end",
-//                                                 [stats objectForKey:@"locations"], @"locations", nil];
-//            [JSONCommute addObject:dict];
-//        }
-//        else{
-//            CLLocation *loc = obj;
-//            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                  [[NSNumber alloc] initWithDouble:loc.coordinate.latitude], @"latitude",
-//                                  [[NSNumber alloc] initWithDouble:loc.coordinate.longitude], @"longitude",
-//                                  [[NSNumber alloc] initWithDouble:loc.horizontalAccuracy], @"horizontalAccuracy",
-//                                  [[NSNumber alloc] initWithDouble:loc.speed], @"speed",
-//                                  [[NSNumber alloc] initWithDouble:loc.course], @"course",
-//                                  [[NSNumber alloc] initWithDouble:loc.altitude], @"altitude",
-//                                  [[NSNumber alloc] initWithDouble:loc.verticalAccuracy], @"verticalAccuracy",
-//                                  [[NSNumber alloc] initWithInt: loc.timestamp.timeIntervalSince1970 ], @"id", nil];
-//            [JSONCommute addObject:dict];
-//        }
-//        index++;
-//    }
-//    }
-//
-//    NSError *error;
-//    NSString *jsonStr;
-//    
-//    for (NSDictionary *dict in JSONCommute) {
-//        //Add each object togeth in an array in a String
-//        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-//        jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//        NSLog(@"%@",jsonStr);
-//    }
-
-    
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:JSONCommute options:0 error:&error];
-//    jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    NSLog(jsonStr);
-    //[self uploadNextData];
-}
-
-- (void) uploadNextData
-{
-    NSLog(@"UPLOAD");
-    
-    NSMutableArray *locs = self.recorder.loggedLocations;
-    NSMutableString *postStr = [NSMutableString stringWithFormat:@"{\"data\":["];
-    
-    int limit = 1;
-    for(int it=0;it<limit;it++) {
-        
-        if ([locs count] < 1) {
-            break;
-        }
-        CLLocation *loc = locs[[locs count]-1];
-        [locs removeLastObject];
-        
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                [[NSNumber alloc] initWithDouble:loc.coordinate.latitude], @"latitude",
-                [[NSNumber alloc] initWithDouble:loc.coordinate.longitude], @"longitude",
-                [[NSNumber alloc] initWithDouble:loc.horizontalAccuracy], @"horizontalAccuracy",
-                [[NSNumber alloc] initWithDouble:loc.speed], @"speed",
-                [[NSNumber alloc] initWithDouble:loc.course], @"course",
-                [[NSNumber alloc] initWithDouble:loc.altitude], @"altitude",
-                [[NSNumber alloc] initWithDouble:loc.verticalAccuracy], @"verticalAccuracy",
-                [[NSNumber alloc] initWithInt: loc.timestamp.timeIntervalSince1970 ], @"id", nil];
-        
-        NSError *error;
-        NSString *jsonStr;
-        
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-        
-        if (! jsonData) {
-            [self.delegate newStatus:[NSString stringWithFormat:@"Got an error: %@", error]];
-        } else {
+    else {
+        if ([self.recorder.loggedLocations count] > 0){
+            NSDate *ts1 = [NSDate date];
+            NSMutableArray *commute = [self.recorder.loggedLocations lastObject];
+            NSMutableDictionary *commuteStats = commute[0];
+            NSLog(@"%@", commuteStats);
+            
+            id objStart = [commuteStats objectForKey:@"start"];
+            if ([objStart isMemberOfClass:[NSDate class]]){
+                NSDate *start = objStart;
+                [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"start"];
+                [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"id"];
+                NSDate *end = [commuteStats objectForKey:@"end"];
+                [commuteStats setObject:[[NSNumber alloc] initWithInt:[end timeIntervalSince1970]] forKey:@"end"];
+            }
+            
+            NSMutableArray *commuteLocations = [[NSMutableArray alloc] initWithArray:[commute objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, commute.count-1)]]];
+            NSMutableArray *routeDict = [[NSMutableArray alloc] init];
+            
+            for (CLLocation *loc in commuteLocations){
+                [routeDict addObject: [NSDictionary dictionaryWithObjectsAndKeys:
+                        [[NSNumber alloc] initWithDouble:loc.coordinate.latitude], @"latitude",
+                        [[NSNumber alloc] initWithDouble:loc.coordinate.longitude], @"longitude",
+                        [[NSNumber alloc] initWithDouble:loc.horizontalAccuracy], @"horizontalAccuracy",
+                        [[NSNumber alloc] initWithDouble:loc.speed], @"speed",
+                        [[NSNumber alloc] initWithDouble:loc.course], @"course",
+                        [[NSNumber alloc] initWithDouble:loc.altitude], @"altitude",
+                        [[NSNumber alloc] initWithDouble:loc.verticalAccuracy], @"verticalAccuracy",
+                        [[NSNumber alloc] initWithInt: loc.timestamp.timeIntervalSince1970 ], @"ts", nil]];
+            }
+            [commuteStats setObject:routeDict forKey:@"route"];
+            
+            NSArray *dataArray = [[NSArray alloc] initWithObjects:commuteStats, nil];
+            NSDictionary *dataDict = [NSDictionary dictionaryWithObjectsAndKeys: dataArray, @"data", nil];
+                                      
+            NSString *jsonStr;
+            NSError *error;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDict options:0 error:&error];
             jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        }
-        
-        if (it == limit-1){
-            [postStr appendString:jsonStr];
-        } else {
-            [postStr appendString:[NSString stringWithFormat:@"%@,",jsonStr]];
+
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/push/test2",[defaults objectForKey:@"url"]]];
+            
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+            [request setHTTPMethod:@"POST"];
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            [request setHTTPBody:[NSData dataWithBytes:[jsonStr UTF8String] length:[jsonStr length]]];
+            
+            TFLog(@"Upload of %i points took %f secs to assemble.",[routeDict count],[[NSDate date] timeIntervalSinceDate:ts1]);
+
+            [NSURLConnection connectionWithRequest:request delegate:self];
         }
     }
-    
-        
-        [postStr appendString:@"]}"];
-
-        NSLog(@"%@",postStr);
-        
-        NSURL *url = [NSURL URLWithString:@"http://db1.locker.cam.ac.uk/push/test1"];
-        
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:[NSData dataWithBytes:[postStr UTF8String] length:[postStr length]]];
-    
-        [NSURLConnection connectionWithRequest:request delegate:self];
 }
-
-
-//- (void) uploadData
-//{
-//    [self.delegate newStatus:[NSString stringWithFormat:@"Uploading..."]];
-//    int limit = 1;
-//    //while ([self.recorder hasLocations]) {
-//    NSMutableString *postStr = [NSMutableString stringWithFormat:@"{\"data\":["];
-//    for(int it=0;it<limit;it++) {
-//        //it++;
-//        //NSLog(@"sending a loc: %i",it);
-//        CLLocation *loc = [self.recorder getLastLocation];
-//        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                              [[NSNumber alloc] initWithDouble:loc.coordinate.latitude], @"latitude",
-//                              [[NSNumber alloc] initWithDouble:loc.coordinate.longitude], @"longitude",
-//                              [[NSNumber alloc] initWithDouble:loc.horizontalAccuracy], @"horizontalAccuracy",
-//                              [[NSNumber alloc] initWithDouble:loc.speed], @"speed",
-//                              [[NSNumber alloc] initWithDouble:loc.course], @"course",
-//                              [[NSNumber alloc] initWithDouble:loc.altitude], @"altitude",
-//                              [[NSNumber alloc] initWithDouble:loc.verticalAccuracy], @"verticalAccuracy",
-//                              //[[NSDate alloc]loc.timestamp, @"timestamp",
-//                              [[NSNumber alloc] initWithInt: loc.timestamp.timeIntervalSince1970 ], @"id", nil];
-//                              //[NSString stringWithFormat:@"2"], @"id", nil];
-//        NSError *error;
-//        NSString *jsonStr;
-//        
-//        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
-//                                                           options:0// NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-//                                                             error:&error];
-//        if (! jsonData) {
-//            [self.delegate newStatus:[NSString stringWithFormat:@"Got an error: %@", error]];
-//        } else {
-//            jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//        }
-//        if (it == limit-1){
-//            [postStr appendString:jsonStr];
-//        } else {
-//            [postStr appendString:[NSString stringWithFormat:@"%@,",jsonStr]];
-//        }
-//    }
-//    
-//    [postStr appendString:@"]}"];
-//    
-//    NSURL *url = [NSURL URLWithString:@"http://db1.locker.cam.ac.uk/push/test1"];
-//            
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-//    [request setHTTPMethod:@"POST"];
-//    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    [request setHTTPBody:[NSData dataWithBytes:[postStr UTF8String] length:[postStr length]]];
-//    
-//    [NSURLConnection connectionWithRequest:request delegate:self];
-//    
-//    [self.delegate newStatus:[NSString stringWithFormat:@"Sent!"]];
-//    
-//    for(int it=0;it<limit;it++) {
-//        //NSLog(@"removed");
-//        [self.recorder removeLastLocation];
-//    }
-//    [self.delegate newStatus:[NSString stringWithFormat:@"All Done!"]];
-//    
-//    NSLog(@"==============All sent!===========");
-//    [self saveLocationRecorder];
-//
-//}
 
 
 // FIXME: Remove these nasty methods. Only for testing purposes.
@@ -372,59 +261,58 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    NSLog(@"CONN: Auth Sent!");
-    NSString *username = @"user1";
-    NSString *password = @"user1";
-    
-    NSURLCredential *credential = [NSURLCredential
-                                   credentialWithUser:username
-                                   password:password
-                                   persistence:NSURLCredentialPersistenceForSession];
-    [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+    TFLog(@"UPLOAD: Authentication handshake");
+    if (challenge.previousFailureCount < 3) {
+        PDKeychainBindings *keyChain = [PDKeychainBindings sharedKeychainBindings];
+        NSString *password = [keyChain objectForKey:@"password"];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *username = [defaults objectForKey:@"crsid"];
+        
+        NSURLCredential *credential = [NSURLCredential
+                                       credentialWithUser:username
+                                       password:password
+                                       persistence:NSURLCredentialPersistenceForSession];
+        [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+    }
+    else {
+        [[challenge sender] cancelAuthenticationChallenge:challenge];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Error: Incorrect Locker Authentication Information"
+                                                        message:@"Please check your locker username and password in the app settings."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        TFLog(@"UPLOAD: Authentication failure");
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    //[self.data setLength:0];
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    [self.delegate newStatus:[NSString stringWithFormat:@"CONN: HTTP Code: %i",[httpResponse statusCode]]];
-    //NSLog(@"CONN: HTTP Code: %i",[httpResponse statusCode]);
-    //NSDictionary *dic = [httpResponse allHeaderFields];
-    //NSLog(@"CONN: Rx Response");
-    //for (id key in dic) {
-    //
-    //    NSLog(@"key: %@, value: %@", key, [dic objectForKey:key]);
-    //
-    //}
-    NSMutableArray *locs = self.recorder.loggedLocations;
-    if ([locs count] > 0 && [httpResponse statusCode] == 200) {
-        NSLog(@"OK, %i more To Come!",[locs count]);
-        //[self saveLocationRecorder];
-        //[self uploadNextData];
-    }
-    if ([locs count] == 0){
-        [self saveLocationRecorder];
-    }
+    TFLog(@"UPLOAD: Got HTTP Code: %i",[httpResponse statusCode]);
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)d
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    //[self.data appendData:d];
-    NSString *strData = [[NSString alloc]initWithData:d encoding:NSUTF8StringEncoding];
-    //NSString *okays = [[NSString alloc] initWithFormat:@"ok"];
+    NSString *strData = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     if ([strData isEqualToString:@"ok"]) {
-        NSLog(@"OKES!");
-        [self uploadNextData];
+        TFLog(@"UPLOAD: Successfull upload");
+        
+        [self.recorder.loggedLocations removeLastObject];
+        [self saveLocationRecorder];
+        
+        if ([self.recorder.loggedLocations count] > 0) [self uploadData];
+        else TFLog(@"UPLOAD: All commutes uploaded.");
     }
-    //NSLog(@"CONN: Rx Data: %@", strData);
-    //[self.delegate newStatus:[NSString stringWithFormat:@"Rx Data: %@",strData]];
+    else TFLog(@"UPLOAD: Bad responce, will retry later.");
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSString *errorTxt = [error localizedDescription];
     [self.delegate newStatus:[NSString stringWithFormat:@"CONN: ConnectionError: %@", errorTxt]];
-    //NSLog(@"CONN: Rx Error");
+    TFLog(@"UPLOAD: Connection error: %@", errorTxt);
 }
 
 
@@ -436,13 +324,10 @@
 {
   NSLog(@"Did start monitoring for region: '%@'", region.identifier);
   [self.delegate newStatus:[NSString stringWithFormat:@"Started Mon for %@, at %@",region.identifier, [NSDate date]]];
-  //[self.delegate newStatus:[NSString stringWithFormat:@"AuthorizationStatus: %@", CLLocationManager.authorizationStatus ? @"YES" : @"NO"]];
-
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
-  //[self.delegate locationController:self newStatus:@"Entered region"];
   [self.delegate newStatus:[NSString stringWithFormat:@"Entered region %@, at %@",region.identifier, [NSDate date]]];
   NSLog(@"Did enter region '%@'", region.identifier);
   [self stopRecording];
@@ -450,7 +335,6 @@
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
-  //[self.delegate locationController:self newStatus:@"Left region"];
   [self.delegate newStatus:[NSString stringWithFormat:@"Exited region %@, at %@",region.identifier, [NSDate date]]];
   [self startRecording];
   NSLog(@"Did exit region '%@'", region.identifier);
@@ -458,9 +342,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-  self.currentLocation = newLocation;
-  //[self.delegate locationController:self updatedLocation:newLocation];
-  
+  self.currentLocation = newLocation;  
   [self.recorder notifyOfNewLocation:newLocation];
 }
 

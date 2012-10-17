@@ -22,7 +22,7 @@
     // Override point for customization after application launch.
     //self.window.backgroundColor = [UIColor whiteColor];
     //[self.window makeKeyAndVisible];
-  
+    NSDate *ts1 = [NSDate date];
     _locationController = [[CCLocationController alloc] init];
   
     // Nasty stuff to let the main view controller know about the controller.
@@ -37,6 +37,13 @@
     #endif
     [TestFlight takeOff:@"a4976ae5b04e2fb808ad7260a8f510eb_MTQyMjU2MjAxMi0xMC0xNSAwODoyMjowMS40NDgyOTY"];
     TFLog(@"App did launch with options: %@",launchOptions);
+    NSMutableDictionary *appDefaults = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+    NSArray *appleKeys = [[NSArray alloc] initWithObjects:@"AppleICUForce24HourTime", @"AppleITunesStoreItemKinds", @"AppleKeyboards",
+            @"AppleKeyboardsExpanded", @"AppleLanguages", @"AppleLocale", @"NSInterfaceStyle", @"NSLanguages", @"TVOutStatus", nil];
+    [appDefaults removeObjectsForKeys:appleKeys];
+    TFLog(@"User settings: %@", appDefaults);
+    NSDate *ts2 = [NSDate date];
+    TFLog(@"App took %f secs to launch with options: %@",[ts2 timeIntervalSinceDate:ts1],launchOptions);
 
     return YES;
 }

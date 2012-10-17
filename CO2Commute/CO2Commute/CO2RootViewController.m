@@ -29,20 +29,33 @@
     return self;
 }
 
-- (IBAction)switched: (UISwitch *)mySwitch{
-  if (mySwitch.on){
-    //NSLog(@"Switched on!");
-    [_locationController startTracking];
-    [loggingSpinner startAnimating];
-    [loggingSpinner setHidden:false];
-  }
-  else {
-    [self.locationController stopTracking];
-    [loggingSpinner setHidden:false];
-    [loggingSpinner stopAnimating];
-    //NSLog(@"Switched off!");
-  }
+//- (IBAction)switched: (UISwitch *)mySwitch{
+//    NSLog(@"Event!");
+//  if (mySwitch.on){
+//    NSLog(@"Switched on!");
+//    [_locationController startTracking];
+//    [loggingSpinner startAnimating];
+//    [loggingSpinner setHidden:false];
+//  }
+//  else {
+//    [self.locationController stopTracking];
+//    [loggingSpinner setHidden:false];
+//    [loggingSpinner stopAnimating];
+//    NSLog(@"Switched off!");
+//  }
+//}
+- (IBAction)switched:(UISwitch *)mySwitch{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (mySwitch.on){
+        [defaults setObject:@"Yes" forKey:@"enable tracking"];
+    }
+    else {
+        [defaults setObject:@"No" forKey:@"enable tracking"];
+    }
+    [defaults synchronize];
+    [_locationController setUpRegionMonitoring];
 }
+
 - (IBAction)uploadTapped:(id)sender {
     NSLog(@"Upload Tapped");
     [_locationController uploadData];
@@ -58,6 +71,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([[NSString stringWithFormat:@"%@",[defaults objectForKey:@"enable tracking"]] isEqualToString:@"No"]) {
+        [self.loggingSwitch setOn:NO animated:YES];
+    }
+    else [self.loggingSwitch setOn:YES animated:YES];
+    
     [_locationController setUp];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -124,6 +144,5 @@
 */
 
 #pragma mark - Table view delegate
-
 
 @end
