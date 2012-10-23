@@ -63,6 +63,7 @@
     [self.mapView addOverlay:line];
     NSDate *t2 = [NSDate date];
     TFLog(@"Commute Map took %f secs to load commute with %i points.",[t2 timeIntervalSinceDate:t1],[CLLocs count]);
+    [TestFlight passCheckpoint:@"VEIWED A COMMUTE"];
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {

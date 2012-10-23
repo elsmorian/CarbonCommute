@@ -98,6 +98,7 @@
         [self.delegate newStatus:[NSString stringWithFormat:@"attempting region monitoring"]];
         [self.manager startMonitoringForRegion:homeRegion];
         [self.manager startMonitoringForRegion:workRegion];
+        [TestFlight passCheckpoint:@"GEOFENCES SET"];
     }
 
 }
@@ -159,6 +160,7 @@
     //self.manager.distanceFilter = ;
     [self.recorder startRecording];
     [self.manager startUpdatingLocation];
+    [TestFlight passCheckpoint:@"STARTED RECORDING"];
 }
 
 - (void) stopRecording
@@ -186,6 +188,7 @@
         [self.delegate newStatus:[NSString stringWithFormat:@"Auto-upload not set, not uploading."]];
         TFLog(@"Auto-upload not set, not uploading.");
     }
+    [TestFlight passCheckpoint:@"FINISHED RECORDING"];
 }
 
 
@@ -214,19 +217,51 @@
             NSDate *ts1 = [NSDate date];
             NSMutableArray *commute = [self.recorder.loggedLocations lastObject];
             NSMutableDictionary *commuteStats = commute[0];
-            NSLog(@"%@", commuteStats);
-            
+            NSMutableArray *commuteLocations = [[NSMutableArray alloc] initWithArray:[commute objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, commute.count-1)]]];
             id objStart = [commuteStats objectForKey:@"start"];
-            //if ([objStart isMemberOfClass:[NSDate class]]){
-                NSDate *start = objStart;
+            id objEnd = [commuteStats objectForKey:@"end"];
+            
+            if ([[commuteStats objectForKey:@"status"] isEqualToString:@"Upload"] || [objStart isKindOfClass:[NSNumber class]]) {
+                TFLog(@"Data already prepped for upload");
+            }
+            else if ([[commuteStats objectForKey:@"status"] isEqualToString:@"OK"]){
+                TFLog(@"Prepping data for upload");
+                NSDate *start = [commuteStats objectForKey:@"start"];
+                NSDate *end = [commuteStats objectForKey:@"end"];
+                
+                [commuteStats setObject:[[NSNumber alloc] initWithInt:[end timeIntervalSince1970]] forKey:@"end"];
                 [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"start"];
                 [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"id"];
-                NSDate *end = [commuteStats objectForKey:@"end"];
-                [commuteStats setObject:[[NSNumber alloc] initWithInt:[end timeIntervalSince1970]] forKey:@"end"];
-            //}
-            NSLog(@"%@", commuteStats);
+                [commuteStats setObject:@"status" forKey:@"Upload"];
+            }
+            else if ([[commuteStats objectForKey:@"status"] isEqualToString:@"In Progress"]){
+                TFLog(@"Bad data, attenpting repair");
+                
+                NSNumber *locsLength = [commuteStats objectForKey:@"locations"];
+                if ([locsLength integerValue] != [commuteLocations count]){
+                    [commuteStats setObject:[[NSNumber alloc] initWithInt:[commuteLocations count]] forKey:@"locations"];
+                }
+                
+                if ([objStart isKindOfClass:[NSDate class]]){
+                    NSLog(@"start is a NSDate");
+                    NSDate *start = [commuteStats objectForKey:@"start"];                    
+                    [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"start"];
+                    [commuteStats setObject:[[NSNumber alloc] initWithInt:[start timeIntervalSince1970]] forKey:@"id"];
+                }
+                if ([objEnd isKindOfClass:[NSDate class]]){
+                    NSLog(@"end is a NSDate");
+                    NSDate *end = [commuteStats objectForKey:@"end"];
+                    [commuteStats setObject:[[NSNumber alloc] initWithInt:[end timeIntervalSince1970]] forKey:@"end"];
+                }
+                NSLog(@"end is: %@", [objEnd class]);
+                NSLog(@"start is: %@", [objStart class]);
+                
+                [commuteStats setObject:@"status" forKey:@"Upload"];
+            }
             
-            NSMutableArray *commuteLocations = [[NSMutableArray alloc] initWithArray:[commute objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, commute.count-1)]]];
+            //NSLog(@"Commute: %@",commuteStats);
+                        
+            
             NSMutableArray *routeDict = [[NSMutableArray alloc] init];
             
             for (CLLocation *loc in commuteLocations){
@@ -260,7 +295,7 @@
                 else {
                     jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/push/test3",[defaults objectForKey:@"url"]]];
+                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/push/test4",[defaults objectForKey:@"url"]]];
                     
                     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
                     [request setHTTPMethod:@"POST"];
@@ -341,6 +376,7 @@
     if ([strData isEqualToString:@"ok"]) {
         TFLog(@"UPLOAD: Successfull upload");
         [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Successfull upload"]];
+        [TestFlight passCheckpoint:@"UPLOAD SUCCESS"];
         
         [self.recorder.loggedLocations removeLastObject];
         [self saveLocationRecorder];
@@ -348,8 +384,10 @@
         if ([self.recorder.loggedLocations count] > 0) [self uploadData];
         else TFLog(@"UPLOAD: All commutes uploaded.");
     }
-    else TFLog(@"UPLOAD: Bad responce, will retry later.");
-    [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Bad responce, will retry later."]];
+    else {
+        TFLog(@"UPLOAD: Bad responce, will retry later.");
+        [self.delegate newStatus:[NSString stringWithFormat:@"UPLOAD: Bad responce, will retry later."]];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

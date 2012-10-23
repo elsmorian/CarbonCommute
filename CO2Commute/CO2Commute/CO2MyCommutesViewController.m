@@ -64,6 +64,7 @@
         [_currentTimeTaken setText:[NSString stringWithFormat:@"%i Minutes",minutes]];
         [_currentDistance setText:[NSString stringWithFormat:@"%.1f km",distance]];
     }
+    [TestFlight passCheckpoint:@"VEIW: LOADED COMMUTE VIEW"];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  

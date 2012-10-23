@@ -53,6 +53,8 @@
         [def setObject:@"No" forKey:@"enable commute-details"];
     }
     
+    [TestFlight passCheckpoint:@"APP LAUNCH"];
+    
     return YES;
 }
 

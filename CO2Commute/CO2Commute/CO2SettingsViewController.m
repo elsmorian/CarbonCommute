@@ -125,6 +125,7 @@
     
     [locControl.delegate newStatus:[NSString stringWithFormat:@"Monitored regions: %@", [locControl getMonitoredRegions]]];
     TFLog(@"Monitored regions: %@", [locControl getMonitoredRegions]);
+    [TestFlight passCheckpoint:@"VIEW: LOADED SETTINGS VIEW"];
     
     [super viewDidLoad];
  

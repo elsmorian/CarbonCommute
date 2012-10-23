@@ -29,6 +29,7 @@
 
 - (void)viewDidLoad
 {
+    [TestFlight passCheckpoint:@"VIEWED SET HOME AND WORK MAP"];
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     NSDate *t1 = [NSDate date];
