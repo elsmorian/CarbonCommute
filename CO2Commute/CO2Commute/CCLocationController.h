@@ -15,7 +15,9 @@
 - (void) newStatus:(NSString *) status;
 @end
 
-@interface CCLocationController : NSObject <CLLocationManagerDelegate, NSURLConnectionDelegate>
+@interface CCLocationController : NSObject <CLLocationManagerDelegate, NSURLConnectionDelegate>{
+    NSNumber *startOfUpload;
+}
 
 @property (nonatomic, assign) id<CCLocationControllerDelegate> delegate;
 @property (nonatomic, retain) CLLocationManager *manager;

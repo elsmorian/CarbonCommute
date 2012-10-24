@@ -314,8 +314,7 @@
                                                     <rect key="frame" x="213" y="8" width="79" height="27"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <connections>
-                                                        <action selector="useCommuteDetailsSwitch" destination="dXx-eY-0g1" eventType="valueChanged" id="og0-V6-nkf"/>
-                                                        <action selector="useCommuteDetailsSwitch:" destination="dXx-eY-0g1" eventType="valueChanged" id="p0x-VF-dl5"/>
+                                                        <action selector="useCommuteDetailsSwitch:" destination="dXx-eY-0g1" eventType="valueChanged" id="Fhg-jx-gc2"/>
                                                     </connections>
                                                 </switch>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Use Commute Details" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PZo-7G-A1y">
@@ -494,6 +493,35 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Debug" id="56o-5a-MjM">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="I2e-BW-NAc">
+                                        <rect key="frame" x="0.0" y="706" width="320" height="46"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="vtJ-p0-r6C">
+                                                    <rect key="frame" x="214" y="8" width="79" height="27"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="manualLogging:" destination="dXx-eY-0g1" eventType="valueChanged" id="Ov4-Zg-FOb"/>
+                                                    </connections>
+                                                </switch>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Manual Logging" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tVx-Go-rSE">
+                                                    <rect key="frame" x="13" y="11" width="151" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="dXx-eY-0g1" id="otv-lf-Qcx"/>
@@ -624,8 +652,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VuU-bY-gi8">
-                                                    <rect key="frame" x="246" y="11" width="44" height="21"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="No Commutes Logged" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VuU-bY-gi8">
+                                                    <rect key="frame" x="119" y="11" width="171" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.2196078431372549" green="0.32941176470588235" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
@@ -1025,6 +1053,63 @@
             <point key="canvasLocation" x="-12" y="-2"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="CO2CommuteMapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2CommuteMapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="CO2MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="map" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="CO2MyCommutesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2MyCommutesViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="currentAverageSpeed" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="currentDistance" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="currentNumberOfGoodLocations" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="currentNumberOfLocations" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="currentTimeTaken" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="CO2RootViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2RootViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="switched:" candidateClass="UISwitch"/>
+                <relationship kind="action" name="uploadTapped:"/>
+                <relationship kind="outlet" name="_debugText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="loggingSpinner" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="loggingSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="uploadButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="CO2SettingsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CO2SettingsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="autoUploadSwitchToggled:" candidateClass="UISwitch"/>
+                <relationship kind="action" name="manualLogging:" candidateClass="UISwitch"/>
+                <relationship kind="action" name="textFieldEditEnded:"/>
+                <relationship kind="action" name="useCommuteDetailsSwitch:" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="accessoryView" candidateClass="UIToolbar"/>
+                <relationship kind="outlet" name="commuteEndField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="commuteLengthField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="commuteStartField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="crsIDField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="endTimeInput" candidateClass="UIDatePicker"/>
+                <relationship kind="outlet" name="lengthInput" candidateClass="UIDatePicker"/>
+                <relationship kind="outlet" name="loggedCommutesLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="loggedDataLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="loggedLocationsLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="startTimeInput" candidateClass="UIDatePicker"/>
+                <relationship kind="outlet" name="urlField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
