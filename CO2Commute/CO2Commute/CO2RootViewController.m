@@ -8,6 +8,8 @@
 
 #import "CO2RootViewController.h"
 #import "CCLocationController.h"
+#import "CO2AppDelegate.h"
+#import "CO2LocationRecorder.h"
 
 @interface CO2RootViewController ()
 
@@ -51,9 +53,38 @@
     }
     else {
         [defaults setObject:@"No" forKey:@"enable tracking"];
+        //CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+        //CCLocationController *locControl = [appDelegate getLocController];
+        if ([[_locationController recorder] isRecording]) {
+            [_locationController stopTracking:NO];
+            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"A commute was being recorded- would you like to delete it, or save it?"
+                                                delegate:self
+                                       cancelButtonTitle:nil
+                                  destructiveButtonTitle:@"Delete"
+                                       otherButtonTitles:@"Save" ,nil];
+            
+            // Show the sheet
+            [sheet showInView:self.view];
+            sheet = nil;
+
+        }
+        
     }
     [defaults synchronize];
     [_locationController setUpRegionMonitoring];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+		case 0:
+			// Delete
+            [[_locationController recorder] removeCurrentCommute];
+			break;
+		case 1:
+			// Save
+            [_locationController uploadData];
+			break;
+	}
 }
 
 - (IBAction)uploadTapped:(id)sender {

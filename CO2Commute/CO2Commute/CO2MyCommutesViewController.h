@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CCLocationController.h"
 
-@interface CO2MyCommutesViewController : UITableViewController <UITableViewDelegate, UIActionSheetDelegate>
+@interface CO2MyCommutesViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 {
     @private
     UIActionSheet *sheet;
@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *currentNumberOfLocations;
 @property (weak, nonatomic) IBOutlet UILabel *currentNumberOfGoodLocations;
 
+@property (weak, nonatomic) IBOutlet UITableView *listOfCommutes;
 
 
 @end

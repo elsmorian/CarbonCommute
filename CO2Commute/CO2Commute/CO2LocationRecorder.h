@@ -25,6 +25,7 @@ extern int const MINGPSACCURACY;
 - (void) notifyOfNewLocation:(CLLocation *)newLocation;
 - (void) startRecording;
 - (void) stopRecording;
+- (BOOL) isRecording;
 
 ///////////
 #pragma mark - Commute Management

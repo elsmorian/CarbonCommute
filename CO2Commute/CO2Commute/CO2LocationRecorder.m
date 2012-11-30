@@ -13,7 +13,7 @@
 @synthesize loggedLocations = _loggedLocations;
 
 
-int const GPSINTERVAL = 5;
+int const GPSINTERVAL = 1;
 int const MINGPSACCURACY = 100;
 ///////////
 #pragma mark - Init
@@ -76,6 +76,11 @@ int const MINGPSACCURACY = 100;
           //[_loggedLocations addObject:location];
       }
   }
+}
+
+- (BOOL) isRecording
+{
+    return _activelyMeasuringLocation;
 }
 
 - (void) startRecording

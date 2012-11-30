@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *crsIDField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UITextField *urlField;
+@property (weak, nonatomic) IBOutlet UISwitch *autoUploadSwitch;
 
 @property (weak, nonatomic) IBOutlet UITextField *commuteLengthField;
 @property (weak, nonatomic) IBOutlet UITextField *commuteStartField;

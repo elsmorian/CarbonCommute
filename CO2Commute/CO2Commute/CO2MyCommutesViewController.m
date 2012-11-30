@@ -53,7 +53,7 @@
             if (loc.horizontalAccuracy <= 10.0) goodLocs++;
         }
         speed = speed / [locs count];
-        speed = speed / 1000*3600;
+        speed = speed * 3.6;
         
         NSTimeInterval interval = [last.timestamp timeIntervalSinceDate:first.timestamp];
         int minutes = floor(interval/60);
@@ -80,6 +80,7 @@
     [self setCurrentAverageSpeed:nil];
     [self setCurrentNumberOfLocations:nil];
     [self setCurrentNumberOfGoodLocations:nil];
+    [self setListOfCommutes:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -104,6 +105,49 @@
 {
     //buttonIndex = 0 for OK
     if (buttonIndex == 0) [[locControl recorder] removeCurrentCommute];
+    //[self viewDidLoad];
+}
+
+- (NSInteger)numberOfRowsInSection:(NSInteger)section
+{
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    locControl = [appDelegate getLocController];
+    
+    NSLog(@"numRows! (%i)",[[[locControl recorder] getCommutes] count]);
+    return [[[locControl recorder] getCommutes] count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCommuteCell"];
+    static NSString *simpleTableIdentifier = @"MyCommuteCell";
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+    }
+    
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    locControl = [appDelegate getLocController];
+    //NSArray *commutes = [[locControl recorder] getCommutes];
+//    NSMutableDictionary *commuteStats = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                         [NSString stringWithFormat:@"In Progress"], @"status",
+//                                         [[NSNumber alloc] initWithDouble:0.0], @"mean speed",
+//                                         [[NSNumber alloc] initWithDouble:0.0], @"modal speed",
+//                                         [[NSNumber alloc] initWithDouble:0.0], @"median speed",
+//                                         [[NSNumber alloc] initWithDouble:0.0], @"max speed",
+//                                         [[NSNumber alloc] initWithDouble:0.0], @"min speed",
+//                                         [[NSDate alloc] init], @"start",
+//                                         [[NSDate alloc] init], @"end",
+//                                         [[NSNumber alloc] initWithInt:0], @"locations",
+//                                         nil];
+    
+    
+    //NSArray *commute = [[[locControl recorder] getCommutes] objectAtIndex:indexPath.row];
+    //NSLog(@"%@",commute);
+    
+    //NSMutableDictionary *commuteStats = [commute objectAtIndex:0];
+    //cell.textLabel.text = [NSString stringWithFormat:@"S:%@, E:%@",[commuteStats objectForKey:@"start"],[commuteStats objectForKey:@"end"]];
+    cell.textLabel.text = [NSString stringWithFormat:@"A Cell!"];
+    return cell;
 }
 
 /*

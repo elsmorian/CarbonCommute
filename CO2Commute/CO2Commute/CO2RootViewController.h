@@ -11,7 +11,7 @@
 
 @class CCLocationController;
 
-@interface CO2RootViewController : UITableViewController <CCLocationControllerDelegate>
+@interface CO2RootViewController : UITableViewController <CCLocationControllerDelegate, UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *uploadButton;
 @property (weak, nonatomic) IBOutlet UISwitch *loggingSwitch;

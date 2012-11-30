@@ -47,6 +47,11 @@
     NSString *commuteLength = [defaults objectForKey:@"commute length"];
     NSString *commuteStart = [defaults objectForKey:@"commute start"];
     NSString *commuteEnd = [defaults objectForKey:@"commute end"];
+    BOOL auto_upload = NO;
+    if ([[defaults objectForKey:@"enable auto-upload"] isEqualToString:@"Yes"]) {
+        auto_upload = YES;
+    }
+    //NSLog(@"%c",auto_upload);
     
     self.accessoryView = [UIToolbar new];
     self.accessoryView.barStyle = UIBarStyleDefault;
@@ -107,6 +112,7 @@
     if (crsid) [self.crsIDField setText:crsid];
     if (password) [self.passwordField setText:password];
     if (url) [self.urlField setText:url];
+    [self.autoUploadSwitch setOn:auto_upload animated:YES];
     
     if (commuteLength) [self.commuteLengthField setText:commuteLength];
     if (commuteStart) [self.commuteStartField setText:commuteStart];
@@ -145,6 +151,7 @@
     [self setCommuteLengthField:nil];
     [self setCommuteStartField:nil];
     [self setCommuteEndField:nil];
+    [self setAutoUploadSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -225,7 +232,7 @@
     }
     else {
         NSLog(@"MANUAL LOGGING STOPPED");
-        [locControl stopTracking];
+        [locControl stopTracking:YES];
     }
 }
 

@@ -17,6 +17,7 @@
 
 @interface CCLocationController : NSObject <CLLocationManagerDelegate, NSURLConnectionDelegate>{
     NSNumber *startOfUpload;
+    UIBackgroundTaskIdentifier uploadTask;
 }
 
 @property (nonatomic, assign) id<CCLocationControllerDelegate> delegate;
@@ -30,7 +31,7 @@
 - (void) setUp;
 - (void) setUpRegionMonitoring;
 - (void) startTracking;
-- (void) stopTracking;
+- (void) stopTracking:(BOOL)autoUpload;
 - (void) uploadData;
 - (NSSet *) getMonitoredRegions;
 
