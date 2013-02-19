@@ -74,6 +74,22 @@
     [_locationController setUpRegionMonitoring];
 }
 
+- (IBAction)debugTapped:(id)sender {
+    NSLog(@"TAP");
+    NSLog(@"hidden: %c, aplha: %f",self.debugWindow.hidden,self.debugWindow.alpha);
+    
+    if (self.debugWindow.alpha == 0) {
+        NSLog(@"hidden, unhiding!");
+        self.debugWindow.alpha = 1;
+    }
+    
+    else if (self.debugWindow.alpha == 1) {
+        NSLog(@"not hidden, hiding!");
+        self.debugWindow.alpha = 0;
+    }
+}
+    
+
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     switch (buttonIndex) {
 		case 0:
@@ -124,6 +140,7 @@
     [self setLoggingSpinner:nil];
     [self set_debugText:nil];
     [self setUploadButton:nil];
+    [self setDebugWindow:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

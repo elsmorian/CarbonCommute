@@ -195,6 +195,11 @@ int const MINGPSACCURACY = 100;
     if ([commute count] > 1) [_loggedLocations removeLastObject];
 }
 
+- (void) removeAllCommutes
+{
+    [_loggedLocations removeAllObjects];
+}
+
 - (BOOL) currentCommuteHasLocations
 {
     NSArray *commute = [_loggedLocations lastObject];

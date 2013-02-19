@@ -10,6 +10,8 @@
 #import "CO2AppDelegate.h"
 #import "CCLocationController.h"
 #import "CO2LocationRecorder.h"
+#import "CO2CommuteCell.h"
+#import "CO2CommuteMapViewController.h"
 
 
 @interface CO2MyCommutesViewController ()
@@ -17,6 +19,8 @@
 @end
 
 @implementation CO2MyCommutesViewController
+
+@synthesize commutes;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -30,58 +34,29 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.uiTableView.delegate = self;
+    //[self.uiTableView registerClass:[CO2CommuteCell class] forCellReuseIdentifier:@"cell"];
     
-//    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    locControl = [appDelegate getLocController];
-//    NSArray *locs = [[locControl recorder] getCurrentCommuteLocations];
-//    
-//    if (locs){
-//        CLLocation *first = locs[0];
-//        CLLocation *last = locs[[locs count]-1];
-//        int goodLocs = 0;
-//        float speed = 0.0;
-//        float distance = 0.0;
-//        int index = 1;
-//        
-//        for (CLLocation *loc in locs) {
-//            speed += loc.speed;
-//            if (index < [locs count]) {
-//                CLLocation *nextLoc = locs[index];
-//                distance += [nextLoc distanceFromLocation:loc]/1000;
-//                index++;
-//            }
-//            if (loc.horizontalAccuracy <= 10.0) goodLocs++;
-//        }
-//        speed = speed / [locs count];
-//        speed = speed * 3.6;
-//        
-//        NSTimeInterval interval = [last.timestamp timeIntervalSinceDate:first.timestamp];
-//        int minutes = floor(interval/60);
-//        NSLog(@"%i",minutes);
-    
-//        [_currentNumberOfGoodLocations setText:[NSString stringWithFormat:@"%i",goodLocs]];
-//        [_currentNumberOfLocations setText:[NSString stringWithFormat:@" / %i",[[locControl recorder] countCurrentCommuteLocations]]];
-//        [_currentAverageSpeed setText:[NSString stringWithFormat:@"%.1f km/hr",speed]];
-//        [_currentTimeTaken setText:[NSString stringWithFormat:@"%i Minutes",minutes]];
-//        [_currentDistance setText:[NSString stringWithFormat:@"%.1f km",distance]];
-    //}
-    [TestFlight passCheckpoint:@"VEIW: LOADED COMMUTE VIEW"];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    locControl = [appDelegate getLocController];
+    self.commutes = [[locControl recorder] getCommutes];
+    //NSLog(@"%@",self.commutes);
+    NSLog(@"loaded! %i",[self.commutes count]);
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    //[super viewDidAppear];
+    //NSLog(@"appeared! ");
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    locControl = [appDelegate getLocController];
+    self.commutes = [[locControl recorder] getCommutes];
+    NSLog(@"appeared! %i",[self.commutes count]);
+    [self.tableView reloadData];
 }
 
 - (void)viewDidUnload
 {
-//    [self setCurrentNumberOfLocations:nil];
-//    [self setCurrentTimeTaken:nil];
-//    [self setCurrentDistance:nil];
-//    [self setCurrentAverageSpeed:nil];
-//    [self setCurrentNumberOfLocations:nil];
-//    [self setCurrentNumberOfGoodLocations:nil];
-//    [self setListOfCommutes:nil];
+    [self setUiTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -92,70 +67,105 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0 && indexPath.row == 5) {
-        // Delete Commute Cell Tapped
-        sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to delete your last commute?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"OK" otherButtonTitles:nil];
-        [sheet showInView:self.view];
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"ShowCommuteDetails"]) {
+        CO2CommuteMapViewController *commuteMapViewController = [segue destinationViewController];
+        
+        NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+        //NSLog(@"%i",[myIndexPath row]);
+        NSArray *commuteArray = [self.commutes objectAtIndex:[myIndexPath row]];
+        //NSLog(@"commuteArray%@",commuteArray);
+        commuteMapViewController.commuteDetails = commuteArray;
+        
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    //buttonIndex = 0 for OK
-    if (buttonIndex == 0) [[locControl recorder] removeCurrentCommute];
-    //[self viewDidLoad];
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    if (indexPath.section == 0 && indexPath.row == 5) {
+//        // Delete Commute Cell Tapped
+//        sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to delete your last commute?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"OK" otherButtonTitles:nil];
+//        [sheet showInView:self.view];
+//    }
+//}
+
+//- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+//{
+//    //buttonIndex = 0 for OK
+//    if (buttonIndex == 0) [[locControl recorder] removeCurrentCommute];
+//    //[self viewDidLoad];
+//}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
-- (NSInteger)numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
-    locControl = [appDelegate getLocController];
-    
-    NSLog(@"numRows! (%i)",[[locControl recorder] countCommutes]);
-    return [[locControl recorder] countCommutes];
+    // Return the number of rows in the section.
+    NSLog(@"%i",[self.commutes count]);
+    return [self.commutes count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCommuteCell"];
-    static NSString *simpleTableIdentifier = @"MyCommuteCell";
+    //static NSString *CellIdentifier = @"cell";
+    //CO2CommuteCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    CO2CommuteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+        cell = [[CO2CommuteCell alloc] init];
+        //[cell reuseIdentifier:@"cell"];
     }
     
-    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
-    locControl = [appDelegate getLocController];
-    //NSArray *commutes = [[locControl recorder] getCommutes];
-//    NSMutableDictionary *commuteStats = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-//                                         [NSString stringWithFormat:@"In Progress"], @"status",
-//                                         [[NSNumber alloc] initWithDouble:0.0], @"mean speed",
-//                                         [[NSNumber alloc] initWithDouble:0.0], @"modal speed",
-//                                         [[NSNumber alloc] initWithDouble:0.0], @"median speed",
-//                                         [[NSNumber alloc] initWithDouble:0.0], @"max speed",
-//                                         [[NSNumber alloc] initWithDouble:0.0], @"min speed",
-//                                         [[NSDate alloc] init], @"start",
-//                                         [[NSDate alloc] init], @"end",
-//                                         [[NSNumber alloc] initWithInt:0], @"locations",
-//                                         nil];
+    // Configure the cell...
+    //int i = [indexPath indexAtPosition:(indexPath.length - 1)];
+    
+    NSArray *cellCommute = [self.commutes objectAtIndex:indexPath.row];
+    NSDictionary *data = [cellCommute objectAtIndex:0];
+    int locs = [cellCommute count] - 1;
+    
+    id startObj = [data objectForKey:@"start"];
+    id endObj = [data objectForKey:@"end"];
+    NSDate *startDate;
+    NSDate *endDate;
     
     
-    //NSArray *commute = [[[locControl recorder] getCommutes] objectAtIndex:indexPath.row];
-    //NSLog(@"%@",commute);
+    if ([startObj isKindOfClass:[NSDate class]]){
+        NSLog(@"Date!");
+        startDate = startObj;
+    }
+    else if ([startObj isKindOfClass:[NSNumber class]]){
+        NSLog(@"Number!");
+        startDate = [NSDate dateWithTimeIntervalSince1970:[startObj integerValue]];
+    }
     
-    //NSMutableDictionary *commuteStats = [commute objectAtIndex:0];
-    //cell.textLabel.text = [NSString stringWithFormat:@"S:%@, E:%@",[commuteStats objectForKey:@"start"],[commuteStats objectForKey:@"end"]];
-    cell.textLabel.text = [NSString stringWithFormat:@"A Cell!"];
+    if ([endObj isKindOfClass:[NSDate class]]){
+        NSLog(@"Date!");
+        startDate = endObj;
+    }
+    else if ([endObj isKindOfClass:[NSNumber class]]){
+        NSLog(@"Number!");
+        endDate = [NSDate dateWithTimeIntervalSince1970:[endObj integerValue]];
+    }
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MM/dd/yy hh:mma"];
+    NSString *s_str = [dateFormatter stringFromDate:startDate];
+    [dateFormatter setDateFormat:@"hh:mma"];
+    NSString *e_str = [dateFormatter stringFromDate:endDate];
+    NSString *txt = [NSString stringWithFormat:@"%@ - %@ (%i points)",s_str,e_str,locs];
+    
+    //NSLog(@"%@",txt);
+    //[cell.commuteSpinner stopAnimating];
+    //cell.commuteSpinner.hidden = YES;
+    cell.commuteText.text = txt;
     return cell;
 }
+
 
 /*
 // Override to support conditional editing of the table view.

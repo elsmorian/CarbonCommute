@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E6079578166979FD00D8C7AD /* CO2CommutesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6079577166979FD00D8C7AD /* CO2CommutesViewController.m */; };
+		CE38AE87166FB74A000B3521 /* appLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = CE38AE86166FB74A000B3521 /* appLogo.png */; };
+		CE38AE8A1670C198000B3521 /* appLogoLow.png in Resources */ = {isa = PBXBuildFile; fileRef = CE38AE891670C198000B3521 /* appLogoLow.png */; };
+		CE38AE8C1670C50E000B3521 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CE38AE8B1670C50E000B3521 /* Default.png */; };
+		CE38AE8E1670C514000B3521 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE38AE8D1670C514000B3521 /* Default@2x.png */; };
+		CE993FAF166E4DB6008EE92A /* CO2CommuteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE993FAE166E4DB6008EE92A /* CO2CommuteCell.m */; };
 		E63B02EB15B8702A006D0890 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B02EA15B8702A006D0890 /* UIKit.framework */; };
 		E63B02ED15B8702A006D0890 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B02EC15B8702A006D0890 /* Foundation.framework */; };
 		E63B02EF15B8702A006D0890 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B02EE15B8702A006D0890 /* CoreGraphics.framework */; };
@@ -32,12 +36,17 @@
 		E6CEC2B51610AA1B0049F421 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6CEC2B41610AA1B0049F421 /* Default-568h@2x.png */; };
 		E6CEC2B91610B1B40049F421 /* CO2CommuteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CEC2B81610B1B40049F421 /* CO2CommuteMapViewController.m */; };
 		E6CEC2BC1610B68F0049F421 /* CO2MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E6CEC2BB1610B68F0049F421 /* CO2MapAnnotation.m */; };
+		E6D672E71680BA3400C92D10 /* Trans.png in Resources */ = {isa = PBXBuildFile; fileRef = E6D672E61680BA3400C92D10 /* Trans.png */; };
 		E6E3A55A162B608D0036474D /* CO2CommuteSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6E3A559162B608D0036474D /* CO2CommuteSettingsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E6079576166979FD00D8C7AD /* CO2CommutesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2CommutesViewController.h; sourceTree = "<group>"; };
-		E6079577166979FD00D8C7AD /* CO2CommutesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2CommutesViewController.m; sourceTree = "<group>"; };
+		CE38AE86166FB74A000B3521 /* appLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appLogo.png; sourceTree = "<group>"; };
+		CE38AE891670C198000B3521 /* appLogoLow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appLogoLow.png; sourceTree = "<group>"; };
+		CE38AE8B1670C50E000B3521 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		CE38AE8D1670C514000B3521 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		CE993FAD166E4DB6008EE92A /* CO2CommuteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2CommuteCell.h; sourceTree = SOURCE_ROOT; };
+		CE993FAE166E4DB6008EE92A /* CO2CommuteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2CommuteCell.m; sourceTree = SOURCE_ROOT; };
 		E63B02E615B8702A006D0890 /* CO2Commute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CO2Commute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63B02EA15B8702A006D0890 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E63B02EC15B8702A006D0890 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -78,6 +87,7 @@
 		E6CEC2B81610B1B40049F421 /* CO2CommuteMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2CommuteMapViewController.m; sourceTree = "<group>"; };
 		E6CEC2BA1610B68F0049F421 /* CO2MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2MapAnnotation.h; sourceTree = "<group>"; };
 		E6CEC2BB1610B68F0049F421 /* CO2MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2MapAnnotation.m; sourceTree = "<group>"; };
+		E6D672E61680BA3400C92D10 /* Trans.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Trans.png; sourceTree = SOURCE_ROOT; };
 		E6E3A558162B608D0036474D /* CO2CommuteSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CO2CommuteSettingsViewController.h; sourceTree = "<group>"; };
 		E6E3A559162B608D0036474D /* CO2CommuteSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CO2CommuteSettingsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +114,10 @@
 		E63B02DB15B8702A006D0890 = {
 			isa = PBXGroup;
 			children = (
+				CE38AE8D1670C514000B3521 /* Default@2x.png */,
+				CE38AE8B1670C50E000B3521 /* Default.png */,
+				CE38AE891670C198000B3521 /* appLogoLow.png */,
+				CE38AE86166FB74A000B3521 /* appLogo.png */,
 				E653C1C5162E1C6F001CF2AD /* Security.framework */,
 				E653C1BF162E1B28001CF2AD /* PDKeychainBindings.h */,
 				E653C1C0162E1B28001CF2AD /* PDKeychainBindings.m */,
@@ -140,9 +154,10 @@
 		E63B02F015B8702A006D0890 /* CO2Commute */ = {
 			isa = PBXGroup;
 			children = (
+				CE993FAD166E4DB6008EE92A /* CO2CommuteCell.h */,
+				CE993FAE166E4DB6008EE92A /* CO2CommuteCell.m */,
 				E63B030115B87047006D0890 /* Main.storyboard */,
-				E6079576166979FD00D8C7AD /* CO2CommutesViewController.h */,
-				E6079577166979FD00D8C7AD /* CO2CommutesViewController.m */,
+				E6D672E61680BA3400C92D10 /* Trans.png */,
 				E6CEC2B71610B1B40049F421 /* CO2CommuteMapViewController.h */,
 				E6CEC2BA1610B68F0049F421 /* CO2MapAnnotation.h */,
 				E6CEC2BB1610B68F0049F421 /* CO2MapAnnotation.m */,
@@ -210,7 +225,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CO2;
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = E63B02E015B8702A006D0890 /* Build configuration list for PBXProject "CO2Commute" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -237,6 +252,11 @@
 				E63B02F515B8702A006D0890 /* InfoPlist.strings in Resources */,
 				E63B030215B87047006D0890 /* Main.storyboard in Resources */,
 				E6CEC2B51610AA1B0049F421 /* Default-568h@2x.png in Resources */,
+				CE38AE87166FB74A000B3521 /* appLogo.png in Resources */,
+				CE38AE8A1670C198000B3521 /* appLogoLow.png in Resources */,
+				CE38AE8C1670C50E000B3521 /* Default.png in Resources */,
+				CE38AE8E1670C514000B3521 /* Default@2x.png in Resources */,
+				E6D672E71680BA3400C92D10 /* Trans.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +281,7 @@
 				E6E3A55A162B608D0036474D /* CO2CommuteSettingsViewController.m in Sources */,
 				E653C1C3162E1B28001CF2AD /* PDKeychainBindings.m in Sources */,
 				E653C1C4162E1B28001CF2AD /* PDKeychainBindingsController.m in Sources */,
-				E6079578166979FD00D8C7AD /* CO2CommutesViewController.m in Sources */,
+				CE993FAF166E4DB6008EE92A /* CO2CommuteCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +305,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -310,6 +334,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

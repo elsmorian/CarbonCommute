@@ -11,6 +11,13 @@
 
 @interface CO2CommuteMapViewController : UIViewController <MKMapViewDelegate>
 
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (strong, nonatomic) IBOutlet MKMapView *mapView;
+@property (strong, nonatomic) IBOutlet UILabel *locationCount;
+@property (strong, nonatomic) IBOutlet UILabel *locationPercent;
+@property (strong, nonatomic) IBOutlet UIProgressView *locationPercentBar;
+@property (strong, nonatomic) IBOutlet UILabel *locationAverageSpeed;
+@property (strong, nonatomic) IBOutlet UILabel *locationDateTime;
+
+@property (strong, nonatomic) NSArray *commuteDetails;
 
 @end

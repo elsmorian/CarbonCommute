@@ -138,7 +138,7 @@
         //NSLog(@"Home Pressed");
         annot.title = @"Home";
         for (MKPointAnnotation *annotation in [_map annotations]) {
-            if (annotation.title == @"Home") {
+            if ([annotation.title isEqualToString:@"Home"]) {
                 [_map removeAnnotation:annotation];
                 break;
             }
@@ -153,7 +153,7 @@
         //NSLog(@"Work Pressed");
         annot.title = @"Work";
         for (MKPointAnnotation *annotation in [_map annotations]) {
-            if (annotation.title == @"Work") {
+            if ([annotation.title isEqualToString:@"Work"]) {
                 [_map removeAnnotation:annotation];
                 break;
             }

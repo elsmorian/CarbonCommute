@@ -20,6 +20,8 @@
 
 @property (nonatomic, assign) CCLocationController *locationController;
 
-- (IBAction)uploadTapped:(id)sender;
+@property (strong, nonatomic) IBOutlet UITextView *debugWindow;
 - (IBAction)switched: (UISwitch *)mySwitch;
+- (IBAction)debugTapped:(id)sender;
+
 @end

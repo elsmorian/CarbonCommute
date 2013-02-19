@@ -157,6 +157,12 @@
     NSLog(@"Started recording at: %@",[NSDate date]);
     device.batteryMonitoringEnabled = NO;
     self.manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    
+    if ([self.manager respondsToSelector:@selector(activityType)]) {
+        TFLog(@"Device responds to >iOS6 activity hints!");
+        self.manager.activityType = CLActivityTypeFitness;
+    }
+        
     //self.manager.distanceFilter = ;
     [self.recorder startRecording];
     [self.manager startUpdatingLocation];
@@ -246,6 +252,27 @@
     else {
         TFLog(@"Prepping data for upload");
         
+        if ([objStart isKindOfClass:[NSNumber class]]) {
+            NSLog(@"Start is a Number");
+        }
+        else if ([objStart isKindOfClass:[NSDate class]]) {
+            NSLog(@"Start is a date");
+        }
+        else if ([objStart isKindOfClass:[NSString class]]) {
+            NSLog(@"Start is a String");
+        }
+        
+        if ([objEnd isKindOfClass:[NSNumber class]]) {
+            NSLog(@"End is a Number");
+        }
+        else if ([objEnd isKindOfClass:[NSDate class]]) {
+            NSLog(@"End is a date");
+        }
+        else if ([objEnd isKindOfClass:[NSString class]]) {
+            NSLog(@"End is a String");
+        }
+        
+        
         if ([objStart isKindOfClass:[NSDate class]]){
             NSLog(@"start is a NSDate");
             NSDate *start = [commuteStats objectForKey:@"start"];
@@ -318,7 +345,15 @@
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:120.0];
             [request setHTTPMethod:@"POST"];
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            
+            //NSString *utfLen = [NSString stringWithFormat:@"%u", [jsonStr length]];
+            
+            //NSData *reqData = [NSData dataWithBytes:[jsonStr UTF8String] length:[jsonStr length]];
+            //[request setValue:utfLen forHTTPHeaderField:@"Content-Length"];
+            //[request setHTTPBodyStream:[NSInputStream inputStreamWithData:reqData]];
             [request setHTTPBody:[NSData dataWithBytes:[jsonStr UTF8String] length:[jsonStr length]]];
+            [request setNetworkServiceType:NSURLNetworkServiceTypeBackground];
+            
             
             TFLog(@"Upload of %i points took %f secs to assemble.",[routeDict count],[[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:[startOfUpload integerValue]]]);
             [self.delegate newStatus:[NSString stringWithFormat:@"Upload of %i points took %f secs to assemble.",[routeDict count],[[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:[startOfUpload integerValue]]]]];

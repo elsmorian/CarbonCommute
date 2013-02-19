@@ -51,6 +51,13 @@
     if ([[defaults objectForKey:@"enable auto-upload"] isEqualToString:@"Yes"]) {
         auto_upload = YES;
     }
+    
+    if ([[locControl recorder] isRecording]) {
+        [self.manualLoggingSwitch setOn:YES animated:YES];
+    }
+    else {
+        [self.manualLoggingSwitch setOn:NO animated:YES];
+    }
     //NSLog(@"%c",auto_upload);
     
     self.accessoryView = [UIToolbar new];
@@ -152,6 +159,7 @@
     [self setCommuteStartField:nil];
     [self setCommuteEndField:nil];
     [self setAutoUploadSwitch:nil];
+    [self setManualLoggingSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -234,6 +242,16 @@
         NSLog(@"MANUAL LOGGING STOPPED");
         [locControl stopTracking:YES];
     }
+}
+
+- (IBAction)uploadData:(id)sender {
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [[appDelegate getLocController] uploadData];
+}
+
+- (IBAction)deleteData:(id)sender {
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [[[appDelegate getLocController] recorder] removeAllCommutes];
 }
 
 - (void)saveSettings:(int)tag {

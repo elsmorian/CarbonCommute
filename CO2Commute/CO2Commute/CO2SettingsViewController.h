@@ -41,6 +41,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *loggedCommutesLabel;
 
 - (IBAction)manualLogging:(UISwitch *)sender;
+@property (strong, nonatomic) IBOutlet UISwitch *manualLoggingSwitch;
+- (IBAction)uploadData:(id)sender;
+- (IBAction)deleteData:(id)sender;
 
 - (void)saveSettings:(int)tag;
 
