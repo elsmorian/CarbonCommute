@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CO2CommutesViewController : UITableViewController
+@interface CO2CommutesViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource> {
+    
+    NSArray *tableViewArray;
+}
+
+@property (nonatomic, retain) NSArray *tableViewArray;
 
 @end

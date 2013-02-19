@@ -31,39 +31,40 @@
 {
     [super viewDidLoad];
     
-    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
-    locControl = [appDelegate getLocController];
-    NSArray *locs = [[locControl recorder] getCurrentCommuteLocations];
+//    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    locControl = [appDelegate getLocController];
+//    NSArray *locs = [[locControl recorder] getCurrentCommuteLocations];
+//    
+//    if (locs){
+//        CLLocation *first = locs[0];
+//        CLLocation *last = locs[[locs count]-1];
+//        int goodLocs = 0;
+//        float speed = 0.0;
+//        float distance = 0.0;
+//        int index = 1;
+//        
+//        for (CLLocation *loc in locs) {
+//            speed += loc.speed;
+//            if (index < [locs count]) {
+//                CLLocation *nextLoc = locs[index];
+//                distance += [nextLoc distanceFromLocation:loc]/1000;
+//                index++;
+//            }
+//            if (loc.horizontalAccuracy <= 10.0) goodLocs++;
+//        }
+//        speed = speed / [locs count];
+//        speed = speed * 3.6;
+//        
+//        NSTimeInterval interval = [last.timestamp timeIntervalSinceDate:first.timestamp];
+//        int minutes = floor(interval/60);
+//        NSLog(@"%i",minutes);
     
-    if (locs){
-        CLLocation *first = locs[0];
-        CLLocation *last = locs[[locs count]-1];
-        int goodLocs = 0;
-        float speed = 0.0;
-        float distance = 0.0;
-        int index = 1;
-        
-        for (CLLocation *loc in locs) {
-            speed += loc.speed;
-            if (index < [locs count]) {
-                CLLocation *nextLoc = locs[index];
-                distance += [nextLoc distanceFromLocation:loc]/1000;
-                index++;
-            }
-            if (loc.horizontalAccuracy <= 10.0) goodLocs++;
-        }
-        speed = speed / [locs count];
-        speed = speed * 3.6;
-        
-        NSTimeInterval interval = [last.timestamp timeIntervalSinceDate:first.timestamp];
-        int minutes = floor(interval/60);
-
-        [_currentNumberOfGoodLocations setText:[NSString stringWithFormat:@"%i",goodLocs]];
-        [_currentNumberOfLocations setText:[NSString stringWithFormat:@" / %i",[[locControl recorder] countCurrentCommuteLocations]]];
-        [_currentAverageSpeed setText:[NSString stringWithFormat:@"%.1f km/hr",speed]];
-        [_currentTimeTaken setText:[NSString stringWithFormat:@"%i Minutes",minutes]];
-        [_currentDistance setText:[NSString stringWithFormat:@"%.1f km",distance]];
-    }
+//        [_currentNumberOfGoodLocations setText:[NSString stringWithFormat:@"%i",goodLocs]];
+//        [_currentNumberOfLocations setText:[NSString stringWithFormat:@" / %i",[[locControl recorder] countCurrentCommuteLocations]]];
+//        [_currentAverageSpeed setText:[NSString stringWithFormat:@"%.1f km/hr",speed]];
+//        [_currentTimeTaken setText:[NSString stringWithFormat:@"%i Minutes",minutes]];
+//        [_currentDistance setText:[NSString stringWithFormat:@"%.1f km",distance]];
+    //}
     [TestFlight passCheckpoint:@"VEIW: LOADED COMMUTE VIEW"];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -74,13 +75,13 @@
 
 - (void)viewDidUnload
 {
-    [self setCurrentNumberOfLocations:nil];
-    [self setCurrentTimeTaken:nil];
-    [self setCurrentDistance:nil];
-    [self setCurrentAverageSpeed:nil];
-    [self setCurrentNumberOfLocations:nil];
-    [self setCurrentNumberOfGoodLocations:nil];
-    [self setListOfCommutes:nil];
+//    [self setCurrentNumberOfLocations:nil];
+//    [self setCurrentTimeTaken:nil];
+//    [self setCurrentDistance:nil];
+//    [self setCurrentAverageSpeed:nil];
+//    [self setCurrentNumberOfLocations:nil];
+//    [self setCurrentNumberOfGoodLocations:nil];
+//    [self setListOfCommutes:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -108,13 +109,19 @@
     //[self viewDidLoad];
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 2;
+}
+
 - (NSInteger)numberOfRowsInSection:(NSInteger)section
 {
     CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
     locControl = [appDelegate getLocController];
     
-    NSLog(@"numRows! (%i)",[[[locControl recorder] getCommutes] count]);
-    return [[[locControl recorder] getCommutes] count];
+    NSLog(@"numRows! (%i)",[[locControl recorder] countCommutes]);
+    return [[locControl recorder] countCommutes];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
