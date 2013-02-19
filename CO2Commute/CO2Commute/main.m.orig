@@ -1,0 +1,37 @@
+//
+//  main.m
+//  CO2Commute
+//
+//  Created by Chris Elsmore on 19/07/2012.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+<<<<<<< HEAD
+
+#import "CO2AppDelegate.h"
+
+int main(int argc, char *argv[])
+{
+=======
+#import "CO2AppDelegate.h"
+
+#ifdef DEBUG
+void eHandler(NSException *);
+
+void eHandler(NSException *exception) {
+    NSLog(@"%@", exception);
+    NSLog(@"%@", [exception callStackSymbols]);
+}
+#endif
+
+int main(int argc, char *argv[])
+{
+    #ifdef DEBUG
+        NSSetUncaughtExceptionHandler(&eHandler);
+    #endif
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([CO2AppDelegate class]));
+    }
+}

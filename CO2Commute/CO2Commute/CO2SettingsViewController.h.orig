@@ -1,0 +1,53 @@
+//
+//  CO2SettingsViewController.h
+//  CO2Commute
+//
+//  Created by Chris Elsmore on 20/07/2012.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface CO2SettingsViewController : UITableViewController <UITextFieldDelegate>{
+    @private
+    NSDateFormatter *hhdf;
+    NSDateFormatter *mmdf;
+    NSUserDefaults *defaults;
+}
+
+@property (weak, nonatomic) IBOutlet UITextField *crsIDField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordField;
+@property (weak, nonatomic) IBOutlet UITextField *urlField;
+@property (weak, nonatomic) IBOutlet UISwitch *autoUploadSwitch;
+
+@property (weak, nonatomic) IBOutlet UITextField *commuteLengthField;
+@property (weak, nonatomic) IBOutlet UITextField *commuteStartField;
+@property (weak, nonatomic) IBOutlet UITextField *commuteEndField;
+
+
+@property (nonatomic, retain) IBOutlet UIToolbar *accessoryView;
+@property (nonatomic, retain) IBOutlet UIDatePicker *lengthInput;
+@property (nonatomic, retain) IBOutlet UIDatePicker *startTimeInput;
+@property (nonatomic, retain) IBOutlet UIDatePicker *endTimeInput;
+
+
+- (IBAction)textFieldEditEnded:(id)sender;
+- (IBAction)autoUploadSwitchToggled:(UISwitch *)sender;
+- (IBAction)useCommuteDetailsSwitch:(UISwitch *)sender;
+
+
+@property (weak, nonatomic) IBOutlet UILabel *loggedLocationsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *loggedDataLabel;
+@property (weak, nonatomic) IBOutlet UILabel *loggedCommutesLabel;
+
+- (IBAction)manualLogging:(UISwitch *)sender;
+<<<<<<< HEAD
+=======
+@property (strong, nonatomic) IBOutlet UISwitch *manualLoggingSwitch;
+- (IBAction)uploadData:(id)sender;
+- (IBAction)deleteData:(id)sender;
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+
+- (void)saveSettings:(int)tag;
+
+@end

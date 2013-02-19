@@ -1,0 +1,172 @@
+//
+//  CO2CommuteMapViewController.m
+//  CO2Commute
+//
+//  Created by Chris Elsmore on 24/09/2012.
+//
+//
+
+#import "CO2CommuteMapViewController.h"
+#import "CO2MapAnnotation.h"
+#import "CO2AppDelegate.h"
+#import "CO2LocationRecorder.h"
+#import "CCLocationController.h"
+
+
+@interface CO2CommuteMapViewController ()
+
+@end
+
+@implementation CO2CommuteMapViewController
+
+<<<<<<< HEAD
+=======
+@synthesize mapView;
+@synthesize locationAverageSpeed;
+@synthesize locationCount;
+@synthesize locationPercent;
+@synthesize locationPercentBar;
+@synthesize locationDateTime;
+@synthesize commuteDetails;
+
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+<<<<<<< HEAD
+=======
+        NSLog(@"init!");
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+<<<<<<< HEAD
+    [super viewDidLoad];
+    NSDate *t1 = [NSDate date];
+
+    CO2AppDelegate *appDelegate = (CO2AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CCLocationController *locControl = [appDelegate getLocController];
+    
+    NSArray *CLLocs = [[locControl recorder] getCurrentCommuteLocations];
+    NSMutableArray *annotations = [[NSMutableArray alloc] init];
+=======
+    //NSLog(@"load!");
+    [super viewDidLoad];
+    NSDate *t1 = [NSDate date];
+    
+    NSArray *CLLocs = [self.commuteDetails subarrayWithRange:NSMakeRange(1, [self.commuteDetails count]-1)];
+    NSLog(@"%@",self.commuteDetails[0]);
+    
+    //NSMutableArray *annotations = [[NSMutableArray alloc] init];
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+    
+    CLLocationCoordinate2D polylineCoords[[CLLocs count]];
+    
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"dd/MM/YYYY HH:mm"];
+    
+    NSInteger index = 0;
+<<<<<<< HEAD
+    
+    for (CLLocation *tmpLoc in CLLocs) {
+        polylineCoords[index] = CLLocationCoordinate2DMake(tmpLoc.coordinate.latitude, tmpLoc.coordinate.longitude);
+        
+        if (index == 0 || index == [CLLocs count]-1) {
+            NSString *title = [df stringFromDate:tmpLoc.timestamp];
+            CO2MapAnnotation *newAnnotation = [[CO2MapAnnotation alloc] initWithTitle:title andCoordinate: tmpLoc.coordinate];
+            [annotations addObject:newAnnotation];
+        }
+=======
+    MKMapRect zoomRect = MKMapRectNull;
+    
+    for (CLLocation *tmpLoc in CLLocs) {
+        CLLocationCoordinate2D point = CLLocationCoordinate2DMake(tmpLoc.coordinate.latitude, tmpLoc.coordinate.longitude);
+        polylineCoords[index] = point;
+        MKMapPoint mapPoint = MKMapPointForCoordinate(point);
+        MKMapRect pointRect = MKMapRectMake(mapPoint.x, mapPoint.y, 0, 1000);
+        
+        if (MKMapRectIsNull(zoomRect)){
+            zoomRect = pointRect;
+        } else {
+            zoomRect = MKMapRectUnion(zoomRect, pointRect);
+        }
+//        if (index == 0 || index == [CLLocs count]-1) {
+//            NSString *title = [df stringFromDate:tmpLoc.timestamp];
+//            CO2MapAnnotation *newAnnotation = [[CO2MapAnnotation alloc] initWithTitle:title andCoordinate: tmpLoc.coordinate];
+//            //[annotations addObject:newAnnotation];
+//        }
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+        index++;
+    }
+    
+    MKPolyline *line = [MKPolyline polylineWithCoordinates:polylineCoords count:[CLLocs count]];
+
+<<<<<<< HEAD
+    [self.mapView addAnnotations:annotations];
+    [self.mapView addOverlay:line];
+=======
+    //[self.mapView addAnnotations:annotations];
+    [self.mapView addOverlay:line];
+    [self.mapView setVisibleMapRect:zoomRect animated:YES];
+    
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+    NSDate *t2 = [NSDate date];
+    TFLog(@"Commute Map took %f secs to load commute with %i points.",[t2 timeIntervalSinceDate:t1],[CLLocs count]);
+    [TestFlight passCheckpoint:@"VEIWED A COMMUTE"];
+}
+
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
+    MKPolylineView *polylineView = [[MKPolylineView alloc] initWithPolyline:overlay];
+    polylineView.strokeColor = [UIColor redColor];
+    polylineView.lineWidth = 2.0;
+<<<<<<< HEAD
+    
+    return polylineView;
+}
+
+- (void)mapView:(MKMapView *)mv didAddAnnotationViews:(NSArray *)views
+{
+	MKAnnotationView *annotationView = [views objectAtIndex:0];
+	id <MKAnnotation> mp = [annotationView annotation];
+	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 1500, 1500);
+	[mv setRegion:region animated:YES];
+	[mv selectAnnotation:mp animated:YES];
+}
+=======
+    NSLog(@"Provided line view");
+    return polylineView;
+}
+
+//- (void)mapView:(MKMapView *)mv didAddAnnotationViews:(NSArray *)views
+//{
+//	MKAnnotationView *annotationView = [views objectAtIndex:0];
+//	id <MKAnnotation> mp = [annotationView annotation];
+//	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 1500, 1500);
+//	[mv setRegion:region animated:YES];
+//	[mv selectAnnotation:mp animated:YES];
+//}
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidUnload {
+    [self setMapView:nil];
+<<<<<<< HEAD
+=======
+    [self setLocationCount:nil];
+    [self setLocationPercent:nil];
+    [self setLocationPercentBar:nil];
+    [self setLocationDateTime:nil];
+>>>>>>> c0aaf7c5446716a6b5702f614d1443149c463fb7
+    [super viewDidUnload];
+}
+@end
